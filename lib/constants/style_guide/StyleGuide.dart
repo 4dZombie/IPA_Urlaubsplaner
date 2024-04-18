@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class StyleGuide {
+  static const kMandatoryText = '*';
+
   //Farben von Figma & Corporate Design übernommen
   static const kColorPrimaryGreen = Color.fromRGBO(175, 202, 11, 1);
   static const kColorSecondaryBlue = Color.fromRGBO(41, 35, 92, 1);
@@ -15,7 +17,7 @@ class StyleGuide {
   static AppBar kPrimaryAppbar({required String title}) {
     return AppBar(
       backgroundColor: kColorPrimaryGreen,
-      title: Text(title, style: const TextStyle(color: kColorBlack)),
+      title: Text(title, style: const TextStyle(color: kColorSecondaryBlue)),
       centerTitle: true,
       //elevation: 0,
     );
@@ -25,7 +27,7 @@ class StyleGuide {
   static AppBar kSecondaryAppbar({required String title}) {
     return AppBar(
       backgroundColor: Colors.transparent,
-      title: Text(title, style: const TextStyle(color: kColorBlack)),
+      title: Text(title, style: const TextStyle(color: kColorSecondaryBlue)),
       centerTitle: true,
       elevation: 0, //setzt schatten auf 0
     );
@@ -39,6 +41,22 @@ class StyleGuide {
   static const kTextSizeExtraLarge = 24.0;
   static const kTextSizeExxtraLarge = 48.0;
 
-  //InputDecoration
-//TODO: sobald ich beim login bin diese einfügen um geordnete Validierung anzuzeigen
+  //InputDecoration für die Textfelder
+  static InputDecoration({
+    String? label,
+    String? hint,
+    bool? isMandatory,
+    Widget? suffixIcon,
+    String? labelText,
+    String? hintText,
+  }) {
+    return InputDecoration(
+      labelText: isMandatory != null && isMandatory == true
+          ? label! + kMandatoryText
+          : label,
+      hintText: hint ?? '',
+      suffixIcon: suffixIcon,
+      isMandatory: isMandatory,
+    );
+  }
 }

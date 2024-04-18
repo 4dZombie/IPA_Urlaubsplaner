@@ -1,5 +1,11 @@
+import '../calendar/calendar.dart';
+import 'district.dart';
+import 'priority.dart';
+import 'rank.dart';
+import 'role.dart';
+
 class User {
-  //Variablen deklarieren
+  //Attribute und dessen typen deklarieren
   final String id;
   final String? company;
   final String? firstName;
@@ -13,8 +19,14 @@ class User {
   final int? employment;
   final bool? kids;
   final bool? student;
+  // Verschachtelte Objekte die komplexere Strukturen abbilden
+  final List<Role>? roles;
+  final List<Calendar>? calendars;
+  final User? deputy;
+  final District? district;
+  final Rank? rank;
+  final Priority? priority;
 
-  //TODO: Sobald Models verfügbar sind: Kalender,District,Rank,Role,Priority und Deputy einfügen
   //Konstruktor
   User({
     required this.id,
@@ -30,6 +42,12 @@ class User {
     this.employment,
     this.kids,
     this.student,
+    this.roles,
+    this.calendars,
+    this.deputy,
+    this.district,
+    this.rank,
+    this.priority,
   });
 
   //Konvertiert ein Json Objekt in ein User Objekt
@@ -48,8 +66,15 @@ class User {
       employment: json['employment'],
       kids: json['kids'],
       student: json['student'],
+      roles: json['roles'],
+      calendars: json['calendars'],
+      deputy: json['deputy'],
+      district: json['district'],
+      rank: json['rank'],
+      priority: json['priority'],
     );
   }
+
   //Konvertiert ein User Objekt in ein Json Objekt
   Map<String, dynamic> toJson() {
     return {
@@ -66,6 +91,11 @@ class User {
       'employment': employment,
       'kids': kids,
       'student': student,
+      'roles': roles,
+      'calendars': calendars,
+      'deputy': deputy,
+      'district': district,
+      'rank': rank,
     };
   }
 }

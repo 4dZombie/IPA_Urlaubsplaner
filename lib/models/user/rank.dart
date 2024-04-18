@@ -1,5 +1,5 @@
 class Rank {
-  //Variablen deklarieren
+  //Attribute und dessen typen deklarieren
   final String id;
   final String? name;
 
