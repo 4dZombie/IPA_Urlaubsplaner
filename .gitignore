@@ -25,3 +25,18 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# IntelliJ related
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Miscelaneous
+.DS_Store
+*.class
+*.log
+*.pyc
+*.swp
+.buildlog/
+
