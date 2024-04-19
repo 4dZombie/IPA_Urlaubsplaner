@@ -1,8 +1,8 @@
-import '../calendar/calendar.dart';
-import 'district.dart';
-import 'priority.dart';
-import 'rank.dart';
-import 'role.dart';
+import '../calendar/Calendar.dart';
+import 'District.dart';
+import 'Priority.dart';
+import 'Rank.dart';
+import 'Role.dart';
 
 class User {
   //Attribute und dessen typen deklarieren
