@@ -2,27 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
 
-class DistrictNumberTextFormField extends StatelessWidget {
+/// Ein [StatelessWidget] Widget, das ein [TextFormField] für die Eingabe einer Beschäftigungsnummer erstellt
+class EmploymentNumberTextFormField extends StatelessWidget {
   // Attribute für das Textfeld und deklaration der Variablen typen
   final TextEditingController controller;
-  final String? label;
-  final String? hint;
+  final String label;
+  final String hint;
   final bool? isMandatory;
   final Widget suffixIcon;
   final FocusNode? focusNode;
 
-  // Konstruktor für das Textfeld
-  const DistrictNumberTextFormField({
+  /// Konstruktor für das Textfeld
+  const EmploymentNumberTextFormField({
     required this.controller,
-    this.label,
-    this.hint,
+    required this.label,
+    required this.hint,
     this.isMandatory = true,
     required this.suffixIcon,
     this.focusNode,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
-  // Erstellung des Textfeldes
+  ///UI für das Textfeld
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -39,7 +40,7 @@ class DistrictNumberTextFormField extends StatelessWidget {
         ),
         cursorColor: StyleGuide.kColorBlack,
         controller: controller,
-        decoration: StyleGuide.InputDecoration(
+        decoration: StyleGuide.kInputDecoration(
                 label: label, hint: hint, isMandatory: isMandatory)
             .copyWith(
           suffixIcon: suffixIcon,
