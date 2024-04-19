@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
@@ -5,8 +7,8 @@ import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
 class DistrictNumberTextFormField extends StatelessWidget {
   // Attribute für das Textfeld und deklaration der Variablen typen
   final TextEditingController controller;
-  final String? label;
-  final String? hint;
+  final String label;
+  final String hint;
   final bool? isMandatory;
   final Widget suffixIcon;
   final FocusNode? focusNode;
@@ -14,13 +16,13 @@ class DistrictNumberTextFormField extends StatelessWidget {
   // Konstruktor für das Textfeld
   const DistrictNumberTextFormField({
     required this.controller,
-    this.label,
-    this.hint,
+    required this.label,
+    required this.hint,
     this.isMandatory = true,
     required this.suffixIcon,
     this.focusNode,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   // Erstellung des Textfeldes
   @override
@@ -39,7 +41,7 @@ class DistrictNumberTextFormField extends StatelessWidget {
         ),
         cursorColor: StyleGuide.kColorBlack,
         controller: controller,
-        decoration: StyleGuide.InputDecoration(
+        decoration: StyleGuide.kInputDecoration(
                 label: label, hint: hint, isMandatory: isMandatory)
             .copyWith(
           suffixIcon: suffixIcon,

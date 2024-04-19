@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, non_constant_identifier_names, constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 class StyleGuide {
@@ -10,6 +12,7 @@ class StyleGuide {
   static const kColorWhite = Color.fromRGBO(255, 255, 255, 1);
   static const kColorBlack = Color.fromRGBO(0, 0, 0, 1);
   static const kColorGrey = Color.fromRGBO(196, 196, 196, 1);
+  static const kColorLink = Color.fromRGBO(40, 163, 233, 1);
 
   //Appbars für die verschiedenen Screens mit der Pflicht einen Titel anzugeben
 
@@ -42,21 +45,57 @@ class StyleGuide {
   static const kTextSizeExxtraLarge = 48.0;
 
   //InputDecoration für die Textfelder
-  static InputDecoration({
-    String? label,
+  static InputDecoration kInputDecoration({
+    required String label,
     String? hint,
     bool? isMandatory,
     Widget? suffixIcon,
-    String? labelText,
-    String? hintText,
   }) {
     return InputDecoration(
       labelText: isMandatory != null && isMandatory == true
-          ? label! + kMandatoryText
+          ? label + kMandatoryText
           : label,
-      hintText: hint ?? '',
+      hintText: hint,
       suffixIcon: suffixIcon,
-      isMandatory: isMandatory,
+      hintStyle: const TextStyle(
+        fontSize: kTextSizeSmall,
+        color: kColorGrey,
+      ),
     );
   }
+
+  // Sizeboxes
+  static const SizedBox SizeBoxHeight8 = SizedBox(height: 8);
+  static const SizedBox SizeBoxHeight16 = SizedBox(height: 16);
+  static const SizedBox SizeBoxHeight32 = SizedBox(height: 32);
+  static const SizedBox SizeBoxHeight48 = SizedBox(height: 48);
+  static const SizedBox SizeBoxWidth8 = SizedBox(width: 8);
+  static const SizedBox SizeBoxWidth16 = SizedBox(width: 16);
+  static const SizedBox SizeBoxWidth32 = SizedBox(width: 32);
+  static const SizedBox SizeBoxWidth48 = SizedBox(width: 48);
+
+  // Padding
+  static const EdgeInsets kPaddingAll = EdgeInsets.all(32);
+
+  //Snackbars
+  static const kSnackBarLoginSuccess = SnackBar(
+    content: Text(
+      'Login erfolgreich',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorPrimaryGreen,
+  );
+  static const kSnackBarLoginError = SnackBar(
+    content: Text(
+      'Bitte überprüfe deine Daten',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorRed,
+  );
 }

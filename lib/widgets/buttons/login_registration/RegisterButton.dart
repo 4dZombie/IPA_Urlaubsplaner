@@ -6,10 +6,14 @@ class RegisterLoginButton extends StatelessWidget {
   final VoidCallback function; //Gibt an, dass die Funktion keine Rückgabe hat
   final String? text;
   final FocusNode? focusNode;
+  final Widget suffixIcon;
 
   const RegisterLoginButton(
-      {required this.function, this.text, Key? key, this.focusNode})
-      : super(key: key);
+      {required this.function,
+      this.text,
+      super.key,
+      this.focusNode,
+      required this.suffixIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +37,19 @@ class RegisterLoginButton extends StatelessWidget {
                         StyleGuide.kColorGrey)), // Farbe des Randes des Buttons
           ),
         ),
-        child: Text(
-          text ?? 'Registrieren',
-          style: const TextStyle(
-              fontSize: StyleGuide.kTextSizeMedium,
-              fontWeight: FontWeight.bold,
-              color: Colors.white),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text!,
+              style: const TextStyle(
+                  fontSize: StyleGuide.kTextSizeMedium,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            suffixIcon,
+            StyleGuide.SizeBoxWidth8,
+          ],
         ),
       ),
     );
