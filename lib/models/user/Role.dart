@@ -1,4 +1,4 @@
-import 'authority.dart';
+import 'Authority.dart';
 
 class Role {
   //Attribute und dessen typen deklarieren

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
 
+/// Ein [StatelessWidget] Widget, das ein [TextFormField] für Passwörter erstellt
 class PasswordTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
@@ -9,6 +10,7 @@ class PasswordTextFormField extends StatelessWidget {
   final Widget suffixIcon;
   final FocusNode? focusNode;
 
+  /// Konstruktor für das Textfeld
   const PasswordTextFormField({
     super.key, //Constructors for public widgets should have a named 'key' parameter. durch IDE eingefügt nutzen noch nicht klar
     required this.controller,
@@ -19,11 +21,12 @@ class PasswordTextFormField extends StatelessWidget {
     this.focusNode,
   });
 
+  /// UI für das Textfeld
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       focusNode: focusNode,
-      textInputAction: TextInputAction.next,
+      textInputAction: TextInputAction.next, // Nächste Taste auf dem Handy
       style: const TextStyle(
         fontSize: StyleGuide.kTextSizeMedium,
         color: StyleGuide.kColorSecondaryBlue,

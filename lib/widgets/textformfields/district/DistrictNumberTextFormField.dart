@@ -1,9 +1,8 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
 
+/// Ein [StatelessWidget] Widget, das ein [TextFormField] für die Eingabe einer Bezirksnummer erstellt
 class DistrictNumberTextFormField extends StatelessWidget {
   // Attribute für das Textfeld und deklaration der Variablen typen
   final TextEditingController controller;
@@ -13,7 +12,7 @@ class DistrictNumberTextFormField extends StatelessWidget {
   final Widget suffixIcon;
   final FocusNode? focusNode;
 
-  // Konstruktor für das Textfeld
+  /// Konstruktor für das Textfeld
   const DistrictNumberTextFormField({
     required this.controller,
     required this.label,
@@ -24,12 +23,14 @@ class DistrictNumberTextFormField extends StatelessWidget {
     super.key,
   });
 
-  // Erstellung des Textfeldes
+  /// Erstellung des Textfeldes
   @override
   Widget build(BuildContext context) {
     return TextFormField(
         textInputAction: TextInputAction.next, // Nächste Taste auf dem Handy
         focusNode: focusNode, // Fokusnode für die Steuerung mit dem Keyboard
+        /// Eingabeformate für das Textfeld
+        /// Erlaubt Nur Nummern von 0-9 und begrenzt auf 4 Zeichen
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
           FilteringTextInputFormatter.digitsOnly,

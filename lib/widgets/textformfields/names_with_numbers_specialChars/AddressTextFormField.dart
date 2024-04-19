@@ -1,9 +1,8 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
 
+/// Ein [StatelessWidget] Widget, das ein [TextFormField] für Namen und Nummern erstellt
 class NameNumberTextFormField extends StatelessWidget {
   // Attribute für das Textfeld und deklaration der Variablen typen
   final TextEditingController controller;
@@ -13,7 +12,7 @@ class NameNumberTextFormField extends StatelessWidget {
   final Widget suffixIcon;
   final FocusNode? focusNode;
 
-  // Konstruktor für das Textfeld
+  /// Konstruktor für das Textfeld
   const NameNumberTextFormField({
     required this.controller,
     required this.label,
@@ -24,7 +23,7 @@ class NameNumberTextFormField extends StatelessWidget {
     super.key,
   });
 
-  // Erstellung des Textfeldes
+  /// UI für das Textfeld
   @override
   Widget build(BuildContext context) {
     return TextFormField(

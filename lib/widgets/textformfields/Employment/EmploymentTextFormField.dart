@@ -1,10 +1,9 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
 
-class DistrictNumberTextFormField extends StatelessWidget {
+/// Ein [StatelessWidget] Widget, das ein [TextFormField] für die Eingabe einer Beschäftigungsnummer erstellt
+class EmploymentNumberTextFormField extends StatelessWidget {
   // Attribute für das Textfeld und deklaration der Variablen typen
   final TextEditingController controller;
   final String label;
@@ -13,8 +12,8 @@ class DistrictNumberTextFormField extends StatelessWidget {
   final Widget suffixIcon;
   final FocusNode? focusNode;
 
-  // Konstruktor für das Textfeld
-  const DistrictNumberTextFormField({
+  /// Konstruktor für das Textfeld
+  const EmploymentNumberTextFormField({
     required this.controller,
     required this.label,
     required this.hint,
@@ -24,7 +23,7 @@ class DistrictNumberTextFormField extends StatelessWidget {
     super.key,
   });
 
-  // Erstellung des Textfeldes
+  ///UI für das Textfeld
   @override
   Widget build(BuildContext context) {
     return TextFormField(

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/style_guide/StyleGuide.dart';
 
+/// RegisterLoginButton ist ein Button, der für die Registrierung und das Login verwendet wird.
 class RegisterLoginButton extends StatelessWidget {
+  // Attribute für den Button
   final VoidCallback function; //Gibt an, dass die Funktion keine Rückgabe hat
   final String? text;
   final FocusNode? focusNode;
   final Widget suffixIcon;
 
+  /// Konstruktor für den Button
   const RegisterLoginButton(
       {required this.function,
       this.text,
@@ -15,6 +18,7 @@ class RegisterLoginButton extends StatelessWidget {
       this.focusNode,
       required this.suffixIcon});
 
+  /// UI für den Button
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -38,6 +42,7 @@ class RegisterLoginButton extends StatelessWidget {
           ),
         ),
         child: Row(
+          // Zeile für den Text und das Icon
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
