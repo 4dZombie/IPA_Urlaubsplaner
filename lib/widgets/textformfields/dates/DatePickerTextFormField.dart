@@ -42,7 +42,7 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
       controller: widget.controller,
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
-        _selectDate(context);
+        _selectDate(context); // Öffnet den DatePicker
       },
       decoration: StyleGuide.kInputDecoration(
               label: widget.label,
@@ -81,10 +81,14 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
           );
         });
 
-    /// Formatiert das Datum in das Format "yyyy/MM/dd" da backend in diesem Format ist
+    /// Formatiert das Datum in das Format 'dd/MM/yyyy' da backend in diesem Format ist
     String formatDate(DateTime date) {
-      return DateFormat('MM/dd/yyyy').format(date);
+      return DateFormat('dd/MM/yyyy').format(date);
     }
+
+    // String formatDate(DateTime date) {
+    //   return DateFormat('yyyy/MM/dd').format(date);
+    // }
 
     /// Setzt das ausgewählte Datum in das [TextFormField]
     if (picked != null && picked != _selectedDate) {
