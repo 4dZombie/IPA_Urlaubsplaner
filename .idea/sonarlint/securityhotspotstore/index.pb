@@ -96,3 +96,7 @@ O
 lib/models/calendar/Events.dart,a\f\af21b0c9a4e9407e08501766bd5328647781f549
 ]
 -lib/screens/calendar/Widgets/EventMarker.dart,e\7\e739b8403007167e910e9dbe27ccbe4cb5f561ae
+]
+-lib/screens/calendar/Widgets/HeaderStyle.dart,8\7\87703fdb33bf05b85193a69bae591d5b33b85f10
+_
+/lib/screens/calendar/Widgets/CalendarStyle.dart,7\c\7c23e46afc2bd8103ce0120aabe094e59c8269b1

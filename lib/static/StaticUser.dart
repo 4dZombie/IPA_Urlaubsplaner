@@ -40,3 +40,24 @@ User user1 = User(
     district: null,
     rank: null,
     priority: null);
+
+User user2 = User(
+    id: '2',
+    company: 'Braso AG',
+    firstName: 'Max2',
+    lastName: 'Muster2',
+    email: 'max2@muster.ch',
+    street: 'Musterstrasse 2',
+    birthdate: '02 / 02 / 2000',
+    holiday: 30,
+    yearsOfEmployment: '02 / 02 / 2000',
+    age: 24,
+    employment: 100,
+    kids: false,
+    student: true,
+    roles: null,
+    calendars: null,
+    deputy: null,
+    district: null,
+    rank: null,
+    priority: null);

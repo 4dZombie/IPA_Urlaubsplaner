@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
 
+import '../../widgets/drawer/Drawer.dart';
+
 class VerificationScreen extends StatelessWidget {
   const VerificationScreen({super.key});
 
@@ -8,6 +10,7 @@ class VerificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: StyleGuide.kPrimaryAppbar(title: "Verifizierung"),
+      drawer: DrawerWidget(),
     );
   }
 }

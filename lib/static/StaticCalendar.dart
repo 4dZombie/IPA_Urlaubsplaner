@@ -9,7 +9,7 @@ import '../models/calendar/Calendar.dart';
 //   final String? userName;
 //   final String? priority;
 
-Calendar Calendar1 = Calendar(
+Calendar calendar1 = Calendar(
     id: '1',
     title: 'Ferien',
     startDate: '01 / 01 / 2024',
