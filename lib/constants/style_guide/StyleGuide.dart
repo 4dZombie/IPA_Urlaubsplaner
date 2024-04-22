@@ -104,9 +104,12 @@ class StyleGuide {
   static const SizedBox SizeBoxWidth48 = SizedBox(width: 48);
 
   // Padding
-
   //Padding um die gesamte App
   static const EdgeInsets kPaddingAll = EdgeInsets.all(32);
+  static const EdgeInsets kPaddingHorizontal =
+      EdgeInsets.symmetric(horizontal: 8, vertical: 2);
+  static const EdgeInsets kPaddingVertical =
+      EdgeInsets.symmetric(vertical: 8, horizontal: 2);
 
   ///Benachrichtigungen am unteren Bildschirmrand
 
