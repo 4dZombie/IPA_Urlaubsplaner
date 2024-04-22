@@ -66,12 +66,21 @@ class User {
       employment: json['employment'],
       kids: json['kids'],
       student: json['student'],
-      roles: json['roles'],
-      calendars: json['calendars'],
-      deputy: json['deputy'],
-      district: json['district'],
-      rank: json['rank'],
-      priority: json['priority'],
+      roles: json['roles'] != null
+          ? List<Role>.from(json['roles'].map((role) => Role.fromJson(role)))
+          : null, //Hier wird die fromJson Methode des Role Objekts aufgerufen um es in ein Role Objekt zu konvertieren, dies wird für alle Objekte in der Liste gemacht
+      calendars: json['calendars'] != null
+          ? List<Calendar>.from(
+              json['calendars'].map((calendar) => Calendar.fromJson(calendar)))
+          : null,
+      deputy: json['deputy'] != null
+          ? User.fromJson(json['deputy'])
+          : null, //Hier wird die fromJson Methode des User Objekts aufgerufen um es in ein User Objekt zu konvertieren
+      district:
+          json['district'] != null ? District.fromJson(json['district']) : null,
+      rank: json['rank'] != null ? Rank.fromJson(json['rank']) : null,
+      priority:
+          json['priority'] != null ? Priority.fromJson(json['priority']) : null,
     );
   }
 
@@ -91,11 +100,15 @@ class User {
       'employment': employment,
       'kids': kids,
       'student': student,
-      'roles': roles,
-      'calendars': calendars,
+      'roles': roles
+          ?.map((role) => role.toJson())
+          .toList(), //Hier wird die toJson Methode des Role Objekts aufgerufen um es in ein Json Objekt zu konvertieren, dies wird für alle Objekte in der Liste gemacht
+      'calendars': calendars?.map((calendar) => calendar.toJson()).toList(),
       'deputy': deputy,
-      'district': district,
-      'rank': rank,
+      'district': district
+          ?.toJson(), //Hier wird die toJson Methode des Rank Objekts aufgerufen um es in ein Json Objekt zu konvertieren
+      'rank': rank?.toJson(),
+      'priority': priority?.toJson(),
     };
   }
 }

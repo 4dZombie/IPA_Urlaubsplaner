@@ -18,7 +18,10 @@ class Role {
     return Role(
       id: json['id'],
       name: json['name'],
-      authorities: json['authorities'],
+      authorities: json['authorities'] != null
+          ? List<Authority>.from(json['authorities']
+              .map((authority) => Authority.fromJson(authority)))
+          : null,
     );
   }
 
@@ -26,6 +29,8 @@ class Role {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
-        'authorities': authorities,
+        'authorities': authorities != null
+            ? List<dynamic>.from(authorities!.map((authority) => authority))
+            : null,
       };
 }

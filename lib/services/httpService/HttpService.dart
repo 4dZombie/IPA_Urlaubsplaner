@@ -95,49 +95,49 @@ class HttpService {
 
   /// registerUser() sendet die Anfrage an die API um sich zu registrieren
   Future<void> registerUser(
+    String company,
     String firstName,
     String lastName,
     String email,
     String password,
-    String confirmPassword,
     String street,
-    String districtNumber,
-    String districtName,
-    String employment,
-    String role,
-    String rank,
     String birthdate,
     String yearsOfService,
+    String districtNumber,
+    String districtName,
+    String rank,
     bool kids,
     bool student,
+    String employment,
   ) async {
     // Trim macht es möglich, dass Leerzeichen am Anfang und Ende des Strings entfernt werden
+    String companyTrimmed = company.trim();
     String firstNameTrimmed = firstName.trim();
     String lastNameTrimmed = lastName.trim();
     String emailTrimmed = email.trim();
     String passwordTrimmed = password.trim();
-    String confirmPasswordTrimmed = confirmPassword.trim();
     String streetTrimmed = street.trim();
-    String districtNumberTrimmed = districtNumber.trim();
-    String districtNameTrimmed = districtName.trim();
-    String employmentTrimmed = employment.trim();
-    String rankTrimmed = rank.trim();
-    String roleTrimmed = role.trim();
     String birthdateTrimmed = birthdate.trim();
     String yearsOfServiceTrimmed = yearsOfService.trim();
-    bool kidsTrimmed = kids;
-    bool studentTrimmed = student;
+    String districtNumberTrimmed = districtNumber.trim();
+    String districtNameTrimmed = districtName.trim();
+    String rankTrimmed = rank.trim();
+    bool kidsTrimmed = kids ?? false;
+    bool studentTrimmed = student ?? false;
+    String employmentTrimmed = employment.trim();
 
     String apiUrl = '$baseUrl/users/register';
 
     /// requestBody enthält die Daten die an die API gesendet werden
     Map<String, dynamic> requestBody = {
+      'company': companyTrimmed,
       'firstName': firstNameTrimmed,
       'lastName': lastNameTrimmed,
       'email': emailTrimmed,
       'password': passwordTrimmed,
-      'confirmPassword': confirmPasswordTrimmed,
       'street': streetTrimmed,
+      'birthdate': birthdateTrimmed,
+      'yearsOfEmployment': yearsOfServiceTrimmed,
       'district': {
         'plz': int.tryParse(districtNumberTrimmed) ?? 0,
         'name': districtNameTrimmed,
@@ -145,12 +145,9 @@ class HttpService {
       'rank': {
         'name': rankTrimmed,
       },
-      'role': roleTrimmed,
-      'birthdate': birthdateTrimmed,
       'kids': kidsTrimmed,
       'student': studentTrimmed,
       'employment': int.tryParse(employmentTrimmed) ?? 0,
-      'yearsOfEmployment': yearsOfServiceTrimmed,
     };
     try {
       /// Anfrage an die API
@@ -170,6 +167,8 @@ class HttpService {
         Get.back();
       } else {
         print('Failed to register user. Error: ${response.body}');
+        //TODO: Loschen von requestBOdy
+        print(requestBody);
         ScaffoldMessenger.of(Get.context!)
             .showSnackBar(StyleGuide.kSnackBarRegisterError);
       }
