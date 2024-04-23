@@ -111,7 +111,31 @@ class StyleGuide {
   static const EdgeInsets kPaddingVertical =
       EdgeInsets.symmetric(vertical: 8, horizontal: 2);
 
-  ///Benachrichtigungen am unteren Bildschirmrand
+  ///Benachrichtigungen am unteren Bildschirmrand mit einer Snackbar
+
+  // Allgeimene Aussagen
+
+  static const kSnackBarSuccess = SnackBar(
+    content: Text(
+      'Erfolgreich',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorPrimaryGreen,
+  );
+
+  static const kSnackBarError = SnackBar(
+    content: Text(
+      'Es ist ein Fehler aufgetreten',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorRed,
+  );
 
   //Login
 
@@ -157,6 +181,40 @@ class StyleGuide {
   static const kSnackBarRegisterError = SnackBar(
     content: Text(
       'Bitte überprüfe deine Daten',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorRed,
+  );
+
+  static const kSnackBarCreatedSuccess = SnackBar(
+    content: Text(
+      'Kalendereintrag erfolgreich erstellt',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorPrimaryGreen,
+  );
+
+  //Fehlerhaftes Login
+  static const kSnackBarCreatedError = SnackBar(
+    content: Text(
+      'Der Kalendereintrag konnte nicht erstellt werden',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorRed,
+  );
+
+  static const kSnackBarCreatedDuplicate = SnackBar(
+    content: Text(
+      'Es existiert bereits ein Kalendereintrag für diesen Zeitraum',
       style: TextStyle(
         color: kColorWhite,
         fontSize: kTextSizeMedium,

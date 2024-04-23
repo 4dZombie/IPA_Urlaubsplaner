@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../constants/style_guide/StyleGuide.dart';
 import '../../../models/calendar/Events.dart';
 
+///TODO: Wird nicht mehr benötigt ist bereits im Model drin und kann nicht importiert werden
+
 class EventMarker extends StatelessWidget {
   final CalendarEvent event; // Event, das markiert wird
 
