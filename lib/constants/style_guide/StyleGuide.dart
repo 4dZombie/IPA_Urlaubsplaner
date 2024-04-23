@@ -111,7 +111,31 @@ class StyleGuide {
   static const EdgeInsets kPaddingVertical =
       EdgeInsets.symmetric(vertical: 8, horizontal: 2);
 
-  ///Benachrichtigungen am unteren Bildschirmrand
+  ///Benachrichtigungen am unteren Bildschirmrand mit einer Snackbar
+
+  // Allgeimene Aussagen
+
+  static const kSnackBarSuccess = SnackBar(
+    content: Text(
+      'Erfolgreich',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorPrimaryGreen,
+  );
+
+  static const kSnackBarError = SnackBar(
+    content: Text(
+      'Es ist ein Fehler aufgetreten',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorRed,
+  );
 
   //Login
 

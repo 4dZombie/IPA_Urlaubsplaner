@@ -26,12 +26,12 @@ class Calendar {
     return Calendar(
       id: json['id'],
       title: json['title'],
-      startDate: json['id'],
-      endDate: json['id'],
-      status: json['id'],
-      createdAt: json['id'],
-      userName: json['id'],
-      priority: json['id'],
+      startDate: json['startDate'],
+      endDate: json['endDate'],
+      status: json['status'],
+      createdAt: json['createdAt'],
+      userName: json['userName'],
+      priority: json['priority'],
     );
   }
 
