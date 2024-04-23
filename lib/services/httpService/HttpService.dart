@@ -5,13 +5,19 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../keys.dart';
+import '../../models/calendar/Calendar.dart';
+import '../../models/user/User.dart';
 
 /// Die Klasse [HttpService] ist die Basis für alle HttpService Klassen
 /// Hier werden die Header für die API Anfragen geholt und der access_token gespeichert
 /// und es wird auch die Anfrage an die API für das Einloggen und Registrieren gemacht
+
+/// Wenn ein Api call nicht erfolgreich ist und der User informiert werden soll, wird ein SnackBar angezeigt
+/// ansonsten wird dieser Fehler in der Konsole ausgegeben
 
 class HttpService {
   ///Basis der HttpService Klasse
@@ -20,7 +26,22 @@ class HttpService {
   final String? baseUrl = apiKey;
   final storage = const FlutterSecureStorage();
 
-  /// getHeaders() holt die Header für die API Anfragen
+  /// [getAccessToken] holt den access_token
+  Future<String?> getAccessToken() async {
+    return await storage.read(key: 'jwtToken');
+  }
+
+  /// [saveAccessToken] speichert den access_token
+  Future saveAccessToken(String jwtToken) async {
+    await storage.write(key: 'jwtToken', value: jwtToken);
+  }
+
+  /// [deleteAccessToken] löscht den access_token
+  Future deleteAccessToken() async {
+    await storage.delete(key: 'jwtToken');
+  }
+
+  /// [getHeaders] holt die Header für die API Anfragen
   Future<Map<String, String>> getHeaders() async {
     String? jwtToken = await getAccessToken();
     return {
@@ -30,23 +51,83 @@ class HttpService {
     };
   }
 
-  /// getAccessToken() holt den access_token
-  Future getAccessToken() async {}
+  /// Benutzerdaten
 
-  /// saveAccessToken() speichert den access_token
-  Future saveAccessToken(String jwtToken) async {
-    await storage.write(key: 'jwtToken', value: jwtToken);
+  /// [extractUserId] extrahiert die User ID aus dem JWT Token
+  String? extractUserId(String? jwtToken) {
+    try {
+      if (jwtToken == null || jwtToken.isEmpty) {
+        print('Error extracting user id: jwtToken is null or empty');
+        return null;
+      }
+      jwtToken =
+          jwtToken.startsWith('Bearer ') ? jwtToken.substring(7) : jwtToken;
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken);
+      String? userId = decodedToken['sub'];
+      return userId;
+    } catch (e) {
+      print('Error extracting user id: $e');
+      return null;
+    }
+  }
+
+  Future<User> getCurrentUser() async {
+    String? jwtToken = await getAccessToken();
+    String? currentUserId = extractUserId(jwtToken!);
+    String apiUrl = '$baseUrl/users/$currentUserId';
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+      );
+      if (response.statusCode == 200) {
+        Map<String, dynamic> userData = jsonDecode(response.body);
+        User user = User.fromJson(userData);
+        return user;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error getting current user: $e');
+      throw e;
+    }
+  }
+
+  Future<User> getCurrentUserId() async {
+    String? jwtToken = await HttpService().getAccessToken();
+    String? currentUserId = HttpService().extractUserId(jwtToken!);
+    String apiUrl = '$apiKey/users/$currentUserId';
+    http.Client client = http.Client();
+    try {
+      final response = await client.get(
+        Uri.parse(apiUrl),
+        headers: await HttpService().getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> userData = jsonDecode(response.body);
+        User user = User.fromJson(userData);
+        return user;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error fetching user: $e');
+    } finally {
+      client.close();
+    }
+    return User(id: '');
   }
 
   ///Login
 
-  /// loginUserEmail() speichert die Email des eingeloggten Users
+  /// [loginUserEmail] speichert die Email des eingeloggten Users
   Future<void> loginUserEmail(String userEmail) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('loggedInUserEmail', userEmail);
   }
 
-  /// loginUser() sendet die Anfrage an die API um sich einzuloggen
+  /// [loginUser] sendet die Anfrage an die API um sich einzuloggen
   Future<String> loginUser(String email, String password) async {
     // Trim macht es möglich, dass Leerzeichen am Anfang und Ende des Strings entfernt werden
     String emailTrimmed = email.trim();
@@ -93,7 +174,7 @@ class HttpService {
 
   ///Registrierung
 
-  /// registerUser() sendet die Anfrage an die API um sich zu registrieren
+  /// [registerUser] sendet die Anfrage an die API um sich zu registrieren
   Future<void> registerUser(
     String company,
     String firstName,
@@ -167,13 +248,70 @@ class HttpService {
         Get.back();
       } else {
         print('Failed to register user. Error: ${response.body}');
-        //TODO: Loschen von requestBOdy
-        print(requestBody);
         ScaffoldMessenger.of(Get.context!)
             .showSnackBar(StyleGuide.kSnackBarRegisterError);
       }
     } catch (e) {
       print('Error during registration: $e');
     }
+  }
+
+  /// Kalender
+
+  Future<List<Calendar>> userCalendar() async {
+    String? jwtToken = await HttpService().getAccessToken();
+    String? currentUserId = HttpService().extractUserId(jwtToken!);
+    String apiUrl = '$apiKey/calendar/user/$currentUserId/calendars';
+    http.Client client = http.Client();
+    try {
+      final response = await client.get(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+      );
+//TODO: prints löschen nach fix
+      if (response.statusCode == 200) {
+        List<dynamic> calendarsData = jsonDecode(response.body);
+        //print('response body $calendarsData');
+        List<Calendar> calendars = calendarsData
+            .map((calendar) => Calendar.fromJson(calendar))
+            .toList();
+        //print('calendar data $calendars');
+        return calendars;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error fetching user calendars: $e');
+    } finally {
+      client.close();
+    }
+    return [];
+  }
+
+  Future<List<Calendar>> allUserCalendar() async {
+    String? jwtToken = await HttpService().getAccessToken();
+    String apiUrl = '$apiKey/calendar';
+    http.Client client = http.Client();
+    try {
+      final response = await client.get(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> calendarsData = jsonDecode(response.body);
+        List<Calendar> calendars = calendarsData
+            .map((calendar) => Calendar.fromJson(calendar))
+            .toList();
+        return calendars;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error fetching user calendars: $e');
+    } finally {
+      client.close();
+    }
+    return [];
   }
 }
