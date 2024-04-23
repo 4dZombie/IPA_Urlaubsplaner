@@ -5,9 +5,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../keys.dart';
+import '../../models/user/User.dart';
 
 /// Die Klasse [HttpService] ist die Basis für alle HttpService Klassen
 /// Hier werden die Header für die API Anfragen geholt und der access_token gespeichert
@@ -20,7 +22,22 @@ class HttpService {
   final String? baseUrl = apiKey;
   final storage = const FlutterSecureStorage();
 
-  /// getHeaders() holt die Header für die API Anfragen
+  /// [getAccessToken] holt den access_token
+  Future getAccessToken() async {
+    await storage.read(key: 'jwtToken');
+  }
+
+  /// [saveAccessToken] speichert den access_token
+  Future saveAccessToken(String jwtToken) async {
+    await storage.write(key: 'jwtToken', value: jwtToken);
+  }
+
+  /// [deleteAccessToken] löscht den access_token
+  Future deleteAccessToken() async {
+    await storage.delete(key: 'jwtToken');
+  }
+
+  /// [getHeaders] holt die Header für die API Anfragen
   Future<Map<String, String>> getHeaders() async {
     String? jwtToken = await getAccessToken();
     return {
@@ -30,23 +47,53 @@ class HttpService {
     };
   }
 
-  /// getAccessToken() holt den access_token
-  Future getAccessToken() async {}
+  /// Benutzerdaten
 
-  /// saveAccessToken() speichert den access_token
-  Future saveAccessToken(String jwtToken) async {
-    await storage.write(key: 'jwtToken', value: jwtToken);
+  /// [extractUserId] extrahiert die User ID aus dem JWT Token
+  String? extractUserId(String jwtToken) {
+    try {
+      jwtToken =
+          jwtToken.startsWith('Bearer') ? jwtToken.substring(7) : jwtToken;
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken);
+      return decodedToken['sub'];
+    } catch (e) {
+      print('Error extracting user id: $e');
+      return null;
+    }
+  }
+
+  Future<User?> getCurrentUser() async {
+    String? jwtToken = await getAccessToken();
+    String? currentUserId = extractUserId(jwtToken!);
+    String apiUrl = '$baseUrl/users/$currentUserId';
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+      );
+      if (response.statusCode == 200) {
+        Map<String, dynamic> userData = jsonDecode(response.body);
+        User user = User.fromJson(userData);
+        return user;
+      } else {
+        print('Failed to get current user. Error: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('Error getting current user: $e');
+      return null;
+    }
   }
 
   ///Login
 
-  /// loginUserEmail() speichert die Email des eingeloggten Users
+  /// [loginUserEmail] speichert die Email des eingeloggten Users
   Future<void> loginUserEmail(String userEmail) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('loggedInUserEmail', userEmail);
   }
 
-  /// loginUser() sendet die Anfrage an die API um sich einzuloggen
+  /// [loginUser] sendet die Anfrage an die API um sich einzuloggen
   Future<String> loginUser(String email, String password) async {
     // Trim macht es möglich, dass Leerzeichen am Anfang und Ende des Strings entfernt werden
     String emailTrimmed = email.trim();
@@ -93,7 +140,7 @@ class HttpService {
 
   ///Registrierung
 
-  /// registerUser() sendet die Anfrage an die API um sich zu registrieren
+  /// [registerUser] sendet die Anfrage an die API um sich zu registrieren
   Future<void> registerUser(
     String company,
     String firstName,

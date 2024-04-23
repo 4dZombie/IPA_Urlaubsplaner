@@ -1,25 +1,6 @@
 import '../models/user/User.dart';
 
-///    required this.id,
-//     this.company,
-//     this.firstName,
-//     this.lastName,
-//     this.email,
-//     this.street,
-//     this.birthdate,
-//     this.holiday,
-//     this.yearsOfEmployment,
-//     this.age,
-//     this.employment,
-//     this.kids,
-//     this.student,
-//     this.roles,
-//     this.calendars,
-//     this.deputy,
-//     this.district,
-//     this.rank,
-//     this.priority,
-
+///Ersatz als das Backend nicht mehr funtionierte
 User user1 = User(
     id: '1',
     company: 'Braso AG',

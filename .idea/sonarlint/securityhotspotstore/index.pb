@@ -86,12 +86,6 @@ J
 lib/static/StaticUser.dart,4\e\4e992b52daab58f1620e2969dc5fd0d34cc11c3b
 N
 lib/static/StaticCalendar.dart,2\4\24abf86900f9c0f29a05fdd88e7c5ddaeb452a4e
-X
-(lib/screens/calendar/BuildEventList.dart,e\4\e4db344ca0d891cd7cfd77f20acb39c466a26666
-X
-(lib/screens/calendar/Widgets/Events.dart,7\f\7fb2ede5b93d820df23dda1d725952868b3fbd9a
-b
-2lib/screens/calendar/Widgets/EventListBuilder.dart,8\3\83af6084ad99ca0631e3b907e58cd4ee9955d9a2
 O
 lib/models/calendar/Events.dart,a\f\af21b0c9a4e9407e08501766bd5328647781f549
 ]
@@ -100,3 +94,5 @@ O
 -lib/screens/calendar/Widgets/HeaderStyle.dart,8\7\87703fdb33bf05b85193a69bae591d5b33b85f10
 _
 /lib/screens/calendar/Widgets/CalendarStyle.dart,7\c\7c23e46afc2bd8103ce0120aabe094e59c8269b1
+N
+lib/screens/calendar/Test.dart,4\9\499f3c0c07328c60d4cab3eeb74181b39feaf68f

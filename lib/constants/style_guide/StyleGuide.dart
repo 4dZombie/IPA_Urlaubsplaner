@@ -164,4 +164,38 @@ class StyleGuide {
     ),
     backgroundColor: kColorRed,
   );
+
+  static const kSnackBarCreatedSuccess = SnackBar(
+    content: Text(
+      'Kalendereintrag erfolgreich erstellt',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorPrimaryGreen,
+  );
+
+  //Fehlerhaftes Login
+  static const kSnackBarCreatedError = SnackBar(
+    content: Text(
+      'Der Kalendereintrag konnte nicht erstellt werden',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorRed,
+  );
+
+  static const kSnackBarCreatedDuplicate = SnackBar(
+    content: Text(
+      'Es existiert bereits ein Kalendereintrag für diesen Zeitraum',
+      style: TextStyle(
+        color: kColorWhite,
+        fontSize: kTextSizeMedium,
+      ),
+    ),
+    backgroundColor: kColorRed,
+  );
 }

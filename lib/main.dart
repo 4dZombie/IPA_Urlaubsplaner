@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:ipa_urlaubsplaner/screens/calendar/CalendarScreen.dart';
+import 'package:ipa_urlaubsplaner/screens/login/LoginScreen.dart';
+import 'package:ipa_urlaubsplaner/screens/register/RegisterScreen.dart';
 import 'package:ipa_urlaubsplaner/screens/settings/SettingsScreen.dart';
 import 'package:ipa_urlaubsplaner/screens/verification/VerificationScreen.dart';
 
@@ -17,15 +19,21 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  /// [GetMaterialApp] ist die Basis für die App
+  /// Hier werden die Routen definiert
+  /// Die App wird gestartet
+  /// Der Titel der App wird gesetzt
+  /// Der Debug Banner wird ausgeschaltet
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       initialRoute: "/",
+      // GetPage sorgt für die Navigation in der App
+      // damit die App weiss welche Seite angezeigt werden soll
       getPages: [
-        //GetPage(name: "/", page: () => const LoginScreen()),
-        //GetPage(name: "/register", page: () => const RegisterScreen()),
-        //GetPage(name: "/calendar", page: () => const CalendarScreen()),
-        GetPage(name: "/", page: () => const CalendarScreen()),
+        GetPage(name: "/", page: () => const LoginScreen()),
+        GetPage(name: "/register", page: () => const RegisterScreen()),
+        GetPage(name: "/calendar", page: () => const CalendarScreen()),
         GetPage(name: "/settings", page: () => const SettingScreen()),
         GetPage(name: "/verification", page: () => const VerificationScreen()),
       ],
