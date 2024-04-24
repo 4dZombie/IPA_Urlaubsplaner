@@ -7,6 +7,7 @@ import 'package:ipa_urlaubsplaner/screens/login/LoginScreen.dart';
 import 'package:ipa_urlaubsplaner/screens/register/RegisterScreen.dart';
 import 'package:ipa_urlaubsplaner/screens/settings/SettingsScreen.dart';
 import 'package:ipa_urlaubsplaner/screens/verification/VerificationScreen.dart';
+import 'package:ipa_urlaubsplaner/screens/verification/history/HistoryScreen.dart';
 
 // FlutterBinding stellt sicher das die App korrekt initialisiert wird
 // dotenv.load lädt die .env Datei
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         GetPage(name: "/register", page: () => const RegisterScreen()),
         GetPage(name: "/calendar", page: () => const CalendarScreen()),
         GetPage(name: "/settings", page: () => const SettingScreen()),
-        GetPage(name: "/verification", page: () => const VerificationScreen()),
+        GetPage(name: "/verification", page: () => VerificationScreen()),
+        GetPage(name: "/history", page: () => const HistoryScreen()),
       ],
       title: "IPA Urlaubsplaner",
       debugShowCheckedModeBanner: false,

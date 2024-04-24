@@ -65,8 +65,8 @@ class HttpService {
       Map<String, dynamic> decodedToken = JwtDecoder.decode(jwtToken);
       String? userId = decodedToken['sub'];
       return userId;
-    } catch (e) {
-      print('Error extracting user id: $e');
+    } catch (error) {
+      print('Error extracting user id: $error');
       return null;
     }
   }
@@ -87,9 +87,9 @@ class HttpService {
       } else {
         throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
-    } catch (e) {
-      print('Error getting current user: $e');
-      throw e;
+    } catch (error) {
+      print('Error getting current user: $error');
+      throw error;
     }
   }
 
@@ -97,9 +97,8 @@ class HttpService {
     String? jwtToken = await HttpService().getAccessToken();
     String? currentUserId = HttpService().extractUserId(jwtToken!);
     String apiUrl = '$apiKey/users/$currentUserId';
-    http.Client client = http.Client();
     try {
-      final response = await client.get(
+      final response = await http.get(
         Uri.parse(apiUrl),
         headers: await HttpService().getHeaders(),
       );
@@ -111,10 +110,8 @@ class HttpService {
       } else {
         throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
-    } catch (e) {
-      print('Error fetching user: $e');
-    } finally {
-      client.close();
+    } catch (error) {
+      print('Error fetching user: $error');
     }
     return User(id: '');
   }
@@ -166,8 +163,8 @@ class HttpService {
             .showSnackBar(StyleGuide.kSnackBarLoginError);
         return '';
       }
-    } catch (e) {
-      print('Error during login: $e');
+    } catch (error) {
+      print('Error during login: $error');
       return '';
     }
   }
@@ -251,8 +248,8 @@ class HttpService {
         ScaffoldMessenger.of(Get.context!)
             .showSnackBar(StyleGuide.kSnackBarRegisterError);
       }
-    } catch (e) {
-      print('Error during registration: $e');
+    } catch (error) {
+      print('Error during registration: $error');
     }
   }
 
@@ -262,9 +259,8 @@ class HttpService {
     String? jwtToken = await HttpService().getAccessToken();
     String? currentUserId = HttpService().extractUserId(jwtToken!);
     String apiUrl = '$apiKey/calendar/user/$currentUserId/calendars';
-    http.Client client = http.Client();
     try {
-      final response = await client.get(
+      final response = await http.get(
         Uri.parse(apiUrl),
         headers: await getHeaders(),
       );
@@ -280,20 +276,16 @@ class HttpService {
       } else {
         throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
-    } catch (e) {
-      print('Error fetching user calendars: $e');
-    } finally {
-      client.close();
+    } catch (error) {
+      print('Error fetching user calendars: $error');
     }
     return [];
   }
 
   Future<List<Calendar>> allUserCalendar() async {
-    String? jwtToken = await HttpService().getAccessToken();
     String apiUrl = '$apiKey/calendar';
-    http.Client client = http.Client();
     try {
-      final response = await client.get(
+      final response = await http.get(
         Uri.parse(apiUrl),
         headers: await getHeaders(),
       );
@@ -307,11 +299,100 @@ class HttpService {
       } else {
         throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
-    } catch (e) {
-      print('Error fetching user calendars: $e');
-    } finally {
-      client.close();
+    } catch (error) {
+      print('Error fetching user calendars: $error');
     }
     return [];
   }
+
+  /// Validierung
+
+  /// [validateEntry] validiert den Eintrag
+  Future<bool> acceptEntry(String id) async {
+    String apiUrl = '$apiKey/calendar/$id/accept';
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+        body: jsonEncode({'status': 'AKZEPTIERT'}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error accepting entry: $error');
+    }
+    return false;
+  }
+
+  /// [declineEntry] lehnt den Eintrag ab
+  Future<bool> declineEntry(String id) async {
+    String apiUrl = '$apiKey/calendar/$id/decline';
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+        body: jsonEncode({'status': 'ABGELEHNT'}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error declining entry: $error');
+    }
+    return false;
+  }
+
+  /// [preCheckEntry] prüft den Eintrag
+  Future<bool> preCheckEntry() async {
+    String apiUrl = '$apiKey/calendar/overlapping/status';
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error pre validating entry: $error');
+    }
+    return false;
+  }
+
+  Future<List<User>> getAllUsers() async {
+    String apiUrl = '$baseUrl/users';
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> usersData = jsonDecode(response.body);
+        List<User> users =
+            usersData.map((user) => User.fromJson(user)).toList();
+        return users;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      throw ('Error fetching all users: $error');
+    }
+  }
+
+  ///Einstellungen
+
+  // Future<> setDeputy(String id){
+  //   String apiUrl = '$apiKey/calendar';
+  // }
+  //
+  // Future<> setAdmin(String id){
+  //   String apiUrl = '$apiKey/calendar';
+  // }
 }

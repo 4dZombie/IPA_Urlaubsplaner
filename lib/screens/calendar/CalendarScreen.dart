@@ -38,7 +38,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   var _calendarFormat = CalendarFormat.month;
 
   ///[initState] wird aufgerufen wenn das Widget erstellt wird
-  ///Es wird der aktuelle User geladen
+  ///Es wird der aktuelle User geladen mit der Methode [getCurrentUserId]
   ///Es wird die Methode [loadUserCalendars] aufgerufen um die Kalender des Users zu laden
   @override
   void initState() {
