@@ -8,6 +8,7 @@ class Calendar {
   final String? createdAt;
   final String? userName;
   final String? priority;
+  final String? userId;
 
   //Konstruktor
   Calendar({
@@ -19,6 +20,7 @@ class Calendar {
     this.createdAt,
     this.userName,
     this.priority,
+    this.userId,
   });
 
   //Konvertiert ein Json Objekt in ein Calendar Objekt
@@ -32,6 +34,7 @@ class Calendar {
       createdAt: json['createdAt'],
       userName: json['userName'],
       priority: json['priority'],
+      userId: json['userId'],
     );
   }
 
@@ -46,6 +49,7 @@ class Calendar {
       'createdAt': createdAt,
       'userName': userName,
       'priority': priority,
+      'userId': userId,
     };
   }
 }
