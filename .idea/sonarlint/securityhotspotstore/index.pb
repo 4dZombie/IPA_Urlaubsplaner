@@ -98,3 +98,5 @@ I
 lib/models/user/Rank.dart,2\6\268cb54054353734fe7f742ef634287fc7f509bd
 R
 "lib/widgets/color/StatusColor.dart,9\6\9696a75740c848a284179bf37204aa7f61c5d21c
+M
+lib/models/user/Priority.dart,a\f\af17254053c012a90a570eafddea0db53496696d

@@ -15,6 +15,7 @@ class StyleGuide {
   static const kColorGrey = Color.fromRGBO(196, 196, 196, 1);
   static const kColorLink = Color.fromRGBO(40, 163, 233, 1);
   static const kColorOrange = Color.fromRGBO(255, 165, 0, 1);
+  static const kColorSecondaryYellow = Color.fromRGBO(255, 255, 0, 1);
 
   //Appbars für die verschiedenen Screens mit der Pflicht einen Titel anzugeben
 
@@ -22,7 +23,9 @@ class StyleGuide {
   static AppBar kPrimaryAppbar({required String title}) {
     return AppBar(
       backgroundColor: kColorPrimaryGreen,
-      title: Text(title, style: const TextStyle(color: kColorSecondaryBlue)),
+      title: Text(title,
+          style: const TextStyle(
+              color: kColorSecondaryBlue, fontSize: kTextSizeExxtraLarge)),
       centerTitle: true,
       //elevation: 0,
     );
@@ -32,7 +35,9 @@ class StyleGuide {
   static AppBar kSecondaryAppbar({required String title}) {
     return AppBar(
       backgroundColor: Colors.transparent,
-      title: Text(title, style: const TextStyle(color: kColorSecondaryBlue)),
+      title: Text(title,
+          style: const TextStyle(
+              color: kColorSecondaryBlue, fontSize: kTextSizeExxtraLarge)),
       centerTitle: true,
       elevation: 0, //setzt schatten auf 0
     );
@@ -43,8 +48,9 @@ class StyleGuide {
   static const kTextSizeSmall = 12.0; //Link
   static const kTextSizeMedium = 16.0; //Textfelder
   static const kTextSizeLarge = 20.0; //Labels
-  static const kTextSizeExtraLarge = 24.0; //Überschriften Appbar
-  static const kTextSizeExxtraLarge = 48.0; //Überschriften Willkommenstext
+  static const kTextSizeExtraLarge = 24.0; //Überschriften
+  static const kTextSizeExxtraLarge = 32.0; //Überschriften Appbar
+  static const kTextSizeExxxtraLarge = 48.0; //Überschriften Willkommenstext
 
   ///InputDecoration für die Textfelder
 

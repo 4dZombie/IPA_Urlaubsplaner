@@ -255,6 +255,46 @@ class HttpService {
 
   /// Kalender
 
+  /// [createCalendarEntry] sendet die Anfrage an die API um einen Kalendereintrag zu erstellen
+  Future createCalendarEntry(
+      String title, DateTime startDate, DateTime endDate) async {
+    //Holt den JWT Token um die API Anfrage zu autorisieren
+    String jwtToken = (await HttpService().getAccessToken())!;
+    String apiUrl = "$apiKey/calendar/entry";
+
+    //Daten die an die API gesendet werden und Datum in String Format umwandeln
+    final Map<String, dynamic> data = {
+      'title': title,
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
+    };
+    //Anfrage an die API
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $jwtToken',
+        },
+        //Daten in JSON Format umwandeln
+        body: jsonEncode(data),
+      );
+      //Wenn die Anfrage erfolgreich war true zurückgeben um dem User eine Erfolgsmeldung zu zeigen
+      if (response.statusCode == 201) {
+        print('Calendar entry created successfully!');
+        return true;
+      } else {
+        print(
+            'Failed to create calendar entry. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return false;
+      }
+    } catch (error) {
+      print('Error creating calendar entry: $error');
+    }
+  }
+
+  /// [userCalendar] holt die Kalender des eingeloggten Users
   Future<List<Calendar>> userCalendar() async {
     String? jwtToken = await HttpService().getAccessToken();
     String? currentUserId = HttpService().extractUserId(jwtToken!);
@@ -282,6 +322,7 @@ class HttpService {
     return [];
   }
 
+  /// [allUserCalendar] holt alle Kalender von allen Usern
   Future<List<Calendar>> allUserCalendar() async {
     String apiUrl = '$apiKey/calendar';
     try {
@@ -307,9 +348,9 @@ class HttpService {
 
   /// Validierung
 
-  /// [validateEntry] validiert den Eintrag
+  /// [acceptEntry] akzeptiert den Eintrag
   Future<bool> acceptEntry(String id) async {
-    String apiUrl = '$apiKey/calendar/$id/accept';
+    String apiUrl = '$apiKey/calendar/$id/status/accept';
     try {
       final response = await http.put(
         Uri.parse(apiUrl),
@@ -329,7 +370,7 @@ class HttpService {
 
   /// [declineEntry] lehnt den Eintrag ab
   Future<bool> declineEntry(String id) async {
-    String apiUrl = '$apiKey/calendar/$id/decline';
+    String apiUrl = '$apiKey/calendar/$id/status/decline';
     try {
       final response = await http.put(
         Uri.parse(apiUrl),
@@ -351,7 +392,7 @@ class HttpService {
   Future<bool> preCheckEntry() async {
     String apiUrl = '$apiKey/calendar/overlapping/status';
     try {
-      final response = await http.put(
+      final response = await http.get(
         Uri.parse(apiUrl),
         headers: await getHeaders(),
       );
@@ -366,6 +407,7 @@ class HttpService {
     return false;
   }
 
+  /// [getUsers] holt alle User
   Future<List<User>> getAllUsers() async {
     String apiUrl = '$baseUrl/users';
     try {
@@ -383,6 +425,30 @@ class HttpService {
       }
     } catch (error) {
       throw ('Error fetching all users: $error');
+    }
+  }
+
+  /// [removeCalendarEntryFromList] entfernt den Kalendereintrag aus der Liste
+  Future<void> removeCalendarEntryFromList(String id) async {
+    String apiUrl = "$apiKey/calendar/$id";
+    final Map<String, dynamic> data = {
+      'id': id,
+    };
+    try {
+      final response = await http.delete(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+        body: jsonEncode(data),
+      );
+      if (response.statusCode == 204) {
+        print('Calendar entry removed successfully!');
+      } else {
+        print(
+            'Failed to remove calendar entry. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (error) {
+      print('Error removing calendar entry: $error');
     }
   }
 

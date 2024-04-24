@@ -61,7 +61,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       'Keine Berechtigung auf diese Seite',
                       style: TextStyle(
                           color: StyleGuide.kColorRed,
-                          fontSize: StyleGuide.kTextSizeExxtraLarge),
+                          fontSize: StyleGuide.kTextSizeExxxtraLarge),
                     ),
                   ),
                   StyleGuide.SizeBoxHeight32,
@@ -89,7 +89,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 'Keine Benutzerdaten gefunden',
                 style: TextStyle(
                     color: StyleGuide.kColorRed,
-                    fontSize: StyleGuide.kTextSizeExxtraLarge),
+                    fontSize: StyleGuide.kTextSizeExxxtraLarge),
               ),
             );
           }

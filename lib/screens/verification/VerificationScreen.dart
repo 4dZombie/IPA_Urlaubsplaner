@@ -8,6 +8,9 @@ import '../../services/httpService/HttpService.dart';
 import '../../widgets/color/StatusColor.dart';
 import '../../widgets/drawer/Drawer.dart';
 
+///[VerificationScreen] ist die Klasse für die Verifizierung der Einträge
+///Es wird überprüft ob der User ein Admin ist, wenn ja wird die Seite angezeigt
+///Wenn nicht wird eine Fehlermeldung angezeigt
 class VerificationScreen extends StatefulWidget {
   VerificationScreen({super.key});
 
@@ -26,7 +29,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
   ///[initState] wird aufgerufen wenn das Widget erstellt wird
   ///Es wird der aktuelle User geladen mit der Methode [getCurrentUserId]
   /// diese wird benötingt um zu überprüfen ob der User ein Admin ist
-  ///
   @override
   void initState() {
     super.initState();
@@ -35,6 +37,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     loadAllUserCalendars();
   }
 
+  ///[loadAllUserCalendars] lädt alle Kalendereinträge von allen Usern
   Future<void> loadAllUserCalendars() async {
     try {
       List<Calendar> calendars = await HttpService().allUserCalendar();
@@ -46,10 +49,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
+  ///[fetchAllUsers] lädt alle User
   void fetchAllUsers() async {
     allUsers = await HttpService().getAllUsers();
   }
 
+  ///[refreshCalendarEntries] lädt alle Kalendereinträge auf aufruf wieder
+  ///nicht sehr effizient soll zukünfitig entfernt werden und mit einem Provider ersetzt werden
   Future<void> refreshCalendarEntries() async {
     try {
       List<Calendar> allCalendarEntries = await HttpService().allUserCalendar();
@@ -61,24 +67,24 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
+  ///[preValidation] überprüft ob ein Eintrag um dem Admin einen Hinweis zugeben ob dieser Eintrag Angenommen werden sollte
   Future<void> preValidation() async {
-    if (CalendarId.isNotEmpty) {
-      bool result = await HttpService().preCheckEntry();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            result
-                ? 'Eintrag erfolgreich vorvalidiert.'
-                : 'Eintrag konnte nicht vorvalidiert werden.',
-          ),
+    bool result = await HttpService().preCheckEntry();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          result
+              ? 'Eintrag erfolgreich vorvalidiert.'
+              : 'Eintrag konnte nicht vorvalidiert werden.',
         ),
-      );
-      if (result) {
-        refreshCalendarEntries();
-      }
+      ),
+    );
+    if (result) {
+      refreshCalendarEntries();
     }
   }
 
+  /// [declineEntry] lehnt einen Eintrag ab
   Future<void> declineEntry(String CalendarId) async {
     if (CalendarId.isNotEmpty) {
       bool result = await HttpService().declineEntry(CalendarId);
@@ -97,6 +103,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
+  /// [acceptEntry] akzeptiert einen Eintrag
   Future<void> acceptEntry(String CalendarId) async {
     if (CalendarId.isNotEmpty) {
       bool result = await HttpService().acceptEntry(CalendarId);
@@ -115,6 +122,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
+  /// [FutureBuilder] wird verwendet um den aktuellen User zu laden
+  /// Wenn der User geladen wurde wird überprüft ob der User ein Admin ist
+  /// Wenn ja wird die Seite angezeigt
+  /// sonst wird eine fehlermeldung angezeigt
+  /// Wenn der User noch nicht geladen wurde wird ein Ladekreis angezeigt
+  /// [buildVerification] wird aufgerufen wenn der User geladen wurde und zeigt die Seite an
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<User>(
@@ -136,7 +149,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       'Keine Berechtigung auf diese Seite',
                       style: TextStyle(
                           color: StyleGuide.kColorRed,
-                          fontSize: StyleGuide.kTextSizeExxtraLarge),
+                          fontSize: StyleGuide.kTextSizeExxxtraLarge),
                     ),
                   ),
                   StyleGuide.SizeBoxHeight32,
@@ -164,7 +177,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 'Keine Benutzerdaten gefunden',
                 style: TextStyle(
                     color: StyleGuide.kColorRed,
-                    fontSize: StyleGuide.kTextSizeExxtraLarge),
+                    fontSize: StyleGuide.kTextSizeExxxtraLarge),
               ),
             );
           }
@@ -189,6 +202,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               flex: 2,
               child: Column(
                 children: [
+                  // um Zwischen Verifizierung und Historie zu wechseln
                   Switch(
                     value: switchButton,
                     onChanged: (bool newValue) {
@@ -213,6 +227,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
             ),
             Expanded(
               flex: 20,
+              // Erstellt eine Liste mit allen Kalendereinträgen
               child: ListView.builder(
                 itemCount: calendarEntries.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -229,24 +244,140 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   return Padding(
                     padding: StyleGuide.kPaddingVertical,
                     child: Card(
-                      color: selectedCalendarIndex == index
-                          ? StyleGuide.kColorSecondaryBlue
-                          : StyleGuide.kColorGrey,
+                      //Design und Struktur der einzelnen Karten
                       child: ListTile(
                         tileColor: getStatusColor().tileColor(calendar.status),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         leading: const Icon(Icons.calendar_today),
-                        title: Text('${calendar.title}'),
-                        subtitle:
-                            Text('${creator.firstName} ${creator.lastName}'),
-                        // onTap: () {
-                        //   setState({
-                        //     CalendarId = calendar.id;
-                        //     selectedCalendarIndex = index;
-                        //   });
-                        // }
+                        title: Text(
+                          '${calendar.title}',
+                          style: const TextStyle(
+                            fontSize: StyleGuide.kTextSizeLarge,
+                            color: StyleGuide.kColorWhite,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Ersteller: ${creator.firstName} ${creator.lastName} \n'
+                          'Ferien Datum: ${calendar.startDate} - ${calendar.endDate}\n'
+                          'Stellvertretung: ${creator.deputy?.firstName ?? 'nicht'} ${creator.deputy?.firstName ?? 'vorhanden'}\n'
+                          'Status: ${calendar.status}\n'
+                          'Erstellt am: ${calendar.createdAt}\n'
+                          'Priorität: ${creator.priority?.points}',
+                          style: const TextStyle(
+                            fontSize: StyleGuide.kTextSizeMedium,
+                            color: StyleGuide.kColorWhite,
+                          ),
+                        ),
+                        //setzt Id um den Eintrag zu akzeptieren oder abzulehnen
+                        onTap: () {
+                          setState(() {
+                            CalendarId = calendar.id;
+                            selectedCalendarIndex = index;
+                          });
+                        },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              iconSize: 32,
+                              color: StyleGuide.kColorRed,
+                              onPressed: () {
+                                declineEntry(calendar.id);
+                              },
+                              icon: const Icon(Icons.close),
+                            ),
+                            // Wenn der Status KEINE_STELLVERTRETUNG ist wird eine Warnung angezeigt damit der Benutzer nochmals darauf hingewisen ist
+                            IconButton(
+                              iconSize: 32,
+                              color: StyleGuide.kColorPrimaryGreen,
+                              onPressed: () {
+                                if (calendar.status ==
+                                    'KEINE_STELLVERTRETUNG') {
+                                  showDialog<void>(
+                                    context: context,
+                                    barrierDismissible:
+                                        false, // Benutzer muss Dialog schließen
+                                    builder: (BuildContext dialogContext) {
+                                      return AlertDialog(
+                                        title: const Text('Bestätigung'),
+                                        content: const Text(
+                                            'Bist du sicher das du diesen Eintrag akzeptieren möchtest?, es gibt keine Stellvertretung'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      StyleGuide
+                                                          .kColorPrimaryGreen),
+                                              shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          16.0),
+                                                ),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'Ja',
+                                              style: TextStyle(
+                                                  color: StyleGuide
+                                                      .kColorSecondaryBlue),
+                                            ),
+                                            onPressed: () {
+                                              acceptEntry(calendar.id);
+                                              Get.back();
+                                            },
+                                          ),
+                                          TextButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      StyleGuide.kColorGrey),
+                                              shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          16.0),
+                                                ),
+                                              ),
+                                            ),
+                                            child: const Text('Abbrechen',
+                                                style: TextStyle(
+                                                    color: StyleGuide
+                                                        .kColorSecondaryBlue)),
+                                            onPressed: () {
+                                              Get.back();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  acceptEntry(calendar.id);
+                                }
+                              },
+                              icon: const Icon(Icons.check),
+                            ),
+                            //Löschen von einträgen
+                            IconButton(
+                              iconSize: 32,
+                              color: StyleGuide.kColorBlack,
+                              onPressed: () {
+                                //TODO: Provisorisch bis Zeit da ist um es korrekt zu implementieren
+                                HttpService()
+                                    .removeCalendarEntryFromList(calendar.id);
+                                setState(() {
+                                  calendarEntries.removeAt(index);
+                                });
+                              },
+                              icon: const Icon(Icons.delete),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -255,6 +386,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
             ),
           ],
         ),
+      ),
+      // Vorvalidierung von allen Einträgen die noch nicht Akzeptiert oder Abgelehnt sind
+      floatingActionButton: FloatingActionButton(
+        onPressed: preValidation,
+        backgroundColor: StyleGuide.kColorPrimaryGreen,
+        child: const Icon(Icons.check, color: StyleGuide.kColorWhite),
       ),
     );
   }
