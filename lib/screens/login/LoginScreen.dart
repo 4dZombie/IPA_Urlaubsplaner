@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Text(
                   'Willkommen zum Urlaubsplaner!',
                   style: TextStyle(
-                    fontSize: StyleGuide.kTextSizeExxtraLarge,
+                    fontSize: StyleGuide.kTextSizeExxxtraLarge,
                     color: StyleGuide.kColorSecondaryBlue,
                   ),
                 ),

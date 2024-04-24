@@ -36,9 +36,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
   final kFirstDay = DateTime.utc(2024, 01, 01);
   final kLastDay = DateTime.utc(2050, 12, 31);
   var _calendarFormat = CalendarFormat.month;
+  String? calendarId;
 
   ///[initState] wird aufgerufen wenn das Widget erstellt wird
-  ///Es wird der aktuelle User geladen
+  ///Es wird der aktuelle User geladen mit der Methode [getCurrentUserId]
   ///Es wird die Methode [loadUserCalendars] aufgerufen um die Kalender des Users zu laden
   @override
   void initState() {
@@ -127,7 +128,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 color: StyleGuide.kColorRed,
                 onPressed: () {
                   //TODO: Provisorisch bis Zeit da ist um es korrekt zu implementieren
-                  event.removeCalendarEntry(event.id ?? "");
+                  HttpService().removeCalendarEntryFromList(event.id ?? "");
                   setState(() {
                     _events.removeAt(index);
                   });
@@ -206,7 +207,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ),
               style: const TextStyle(
-                color: StyleGuide.kColorWhite,
+                color: StyleGuide.kColorSecondaryBlue,
                 fontSize: StyleGuide.kTextSizeMedium,
               ),
             ),
@@ -274,8 +275,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     User? user = await HttpService().getCurrentUser();
     //String? userName = '${user!.firstName} ${user.lastName}';
     String? deputy = '${user.deputy?.firstName} ${user.deputy?.lastName}';
+    String? id = calendarId; // Funktioniert noch nicht
     //TODO: ID vom Kalender holen um den Kalendereintrage wieder zu löschen
-    String id = '';
     String? status;
 
     if (selectedDays.isNotEmpty) {
@@ -292,7 +293,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       );
       // Wenn API request return true wird der Kalendereintrag erstellt
       // sonst eine Fehlermeldung
-      bool success = await newEvent.createCalendarEntry();
+      bool success = await HttpService().createCalendarEntry(title, start, end);
       setState(() {
         if (success) {
           _events.add(newEvent);
@@ -332,7 +333,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 'Keine Benutzerdaten gefunden',
                 style: TextStyle(
                     color: StyleGuide.kColorRed,
-                    fontSize: StyleGuide.kTextSizeExxtraLarge),
+                    fontSize: StyleGuide.kTextSizeExxxtraLarge),
               ),
             );
           }
