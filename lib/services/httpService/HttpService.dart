@@ -200,8 +200,8 @@ class HttpService {
     String districtNumberTrimmed = districtNumber.trim();
     String districtNameTrimmed = districtName.trim();
     String rankTrimmed = rank.trim();
-    bool kidsTrimmed = kids ?? false;
-    bool studentTrimmed = student ?? false;
+    bool kidsTrimmed = kids;
+    bool studentTrimmed = student;
     String employmentTrimmed = employment.trim();
 
     String apiUrl = '$baseUrl/users/register';

@@ -5,6 +5,7 @@ import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
 import '../../../models/calendar/Calendar.dart';
 import '../../../models/user/User.dart';
 import '../../../services/httpService/HttpService.dart';
+import '../../../widgets/color/StatusColor.dart';
 import '../../../widgets/drawer/Drawer.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -17,6 +18,9 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   late Future<User> currentUser;
   List<Calendar> calendarEntries = [];
+  late List<User> allUsers = [];
+  late String CalendarId;
+  int? selectedCalendarIndex;
   bool switchButton = true;
 
   ///[initState] wird aufgerufen wenn das Widget erstellt wird
@@ -27,17 +31,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     super.initState();
     currentUser = HttpService().getCurrentUserId();
+    fetchAllUsers();
+    loadAllUserCalendars();
   }
 
-  Future<void> refreshCalendarEntries() async {
+  ///[loadAllUserCalendars] lädt alle Kalendereinträge von allen Usern
+  Future<void> loadAllUserCalendars() async {
     try {
-      List<Calendar> allCalendarEntries = await HttpService().allUserCalendar();
+      List<Calendar> calendars = await HttpService().allUserCalendar();
       setState(() {
-        calendarEntries = allCalendarEntries;
+        calendarEntries = calendars;
       });
     } catch (error) {
-      print('Error refreshing calendar entries: $error');
+      print('Error loading user calendars: $error');
     }
+  }
+
+  ///[fetchAllUsers] lädt alle User
+  void fetchAllUsers() async {
+    allUsers = await HttpService().getAllUsers();
   }
 
   @override
@@ -139,11 +151,84 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Expanded(
               flex: 20,
               child: ListView.builder(
-                itemCount: 1,
+                itemCount: calendarEntries.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text("Test"),
-                  );
+                  Calendar calendar = calendarEntries[index];
+                  //Erstellt nur Karten die den Status [AKZEPTIERT][ABGELEHNT] haben
+                  if (calendar.status == 'AKZEPTIERT' ||
+                      calendar.status == 'ABGELEHNT') {
+                    User creator = allUsers.firstWhere(
+                        (user) => user.id == calendar.userId,
+                        orElse: () => User(
+                              id: 'Nicht gefunden',
+                              firstName: 'Nicht gefunden',
+                              lastName: 'Nicht gefunden',
+                              priority: null,
+                              deputy: null,
+                            ));
+                    return Padding(
+                      padding: StyleGuide.kPaddingVertical,
+                      child: Card(
+                        //Design und Struktur der einzelnen Karten
+                        child: ListTile(
+                          tileColor:
+                              getStatusColor().tileColor(calendar.status),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          leading: const Icon(Icons.calendar_today),
+                          title: Text(
+                            '${calendar.title}',
+                            style: const TextStyle(
+                              fontSize: StyleGuide.kTextSizeLarge,
+                              color: StyleGuide.kColorWhite,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Ersteller: ${creator.firstName} ${creator.lastName} \n'
+                            'Ferien Datum: ${calendar.startDate} - ${calendar.endDate}\n'
+                            'Stellvertretung: ${creator.deputy?.firstName ?? 'nicht'} ${creator.deputy?.firstName ?? 'vorhanden'}\n'
+                            'Status: ${calendar.status}\n'
+                            'Erstellt am: ${calendar.createdAt}\n'
+                            'Priorität: ${creator.priority?.points}',
+                            style: const TextStyle(
+                              fontSize: StyleGuide.kTextSizeMedium,
+                              color: StyleGuide.kColorWhite,
+                            ),
+                          ),
+                          //setzt Id um den Eintrag zu akzeptieren oder abzulehnen
+                          onTap: () {
+                            setState(() {
+                              CalendarId = calendar.id;
+                              selectedCalendarIndex = index;
+                            });
+                          },
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              //Löschen von einträgen
+                              IconButton(
+                                iconSize: 32,
+                                color: StyleGuide.kColorBlack,
+                                onPressed: () {
+                                  //TODO: Provisorisch bis Zeit da ist um es korrekt zu implementieren
+                                  HttpService()
+                                      .removeCalendarEntryFromList(calendar.id);
+                                  setState(() {
+                                    calendarEntries.removeAt(index);
+                                  });
+                                },
+                                icon: const Icon(Icons.delete),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
                 },
               ),
             ),

@@ -22,9 +22,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
   late Future<User> currentUser;
   List<Calendar> calendarEntries = [];
   late List<User> allUsers = [];
-  bool switchButton = false;
   late String CalendarId;
   int? selectedCalendarIndex;
+  bool switchButton = false;
 
   ///[initState] wird aufgerufen wenn das Widget erstellt wird
   ///Es wird der aktuelle User geladen mit der Methode [getCurrentUserId]
@@ -232,155 +232,166 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 itemCount: calendarEntries.length,
                 itemBuilder: (BuildContext context, int index) {
                   Calendar calendar = calendarEntries[index];
-                  User creator =
-                      allUsers.firstWhere((user) => user.id == calendar.userId,
-                          orElse: () => User(
-                                id: 'Nicht gefunden',
-                                firstName: 'Nicht gefunden',
-                                lastName: 'Nicht gefunden',
-                                priority: null,
-                                deputy: null,
-                              ));
-                  return Padding(
-                    padding: StyleGuide.kPaddingVertical,
-                    child: Card(
-                      //Design und Struktur der einzelnen Karten
-                      child: ListTile(
-                        tileColor: getStatusColor().tileColor(calendar.status),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        leading: const Icon(Icons.calendar_today),
-                        title: Text(
-                          '${calendar.title}',
-                          style: const TextStyle(
-                            fontSize: StyleGuide.kTextSizeLarge,
-                            color: StyleGuide.kColorWhite,
-                            fontWeight: FontWeight.bold,
+
+                  if (calendar.status == 'KEINE_STELLVERTRETUNG' ||
+                      calendar.status == 'IN_BEARBEITUNG' ||
+                      calendar.status == 'VORLAEUFIG_AKZEPTIERT' ||
+                      calendar.status == 'VORLAEUFIG_ABGELEHNT') {
+                    User creator = allUsers.firstWhere(
+                        (user) => user.id == calendar.userId,
+                        orElse: () => User(
+                              id: 'Nicht gefunden',
+                              firstName: 'Nicht gefunden',
+                              lastName: 'Nicht gefunden',
+                              priority: null,
+                              deputy: null,
+                            ));
+                    return Padding(
+                      padding: StyleGuide.kPaddingVertical,
+                      child: Card(
+                        //Design und Struktur der einzelnen Karten
+                        child: ListTile(
+                          tileColor:
+                              getStatusColor().tileColor(calendar.status),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ),
-                        subtitle: Text(
-                          'Ersteller: ${creator.firstName} ${creator.lastName} \n'
-                          'Ferien Datum: ${calendar.startDate} - ${calendar.endDate}\n'
-                          'Stellvertretung: ${creator.deputy?.firstName ?? 'nicht'} ${creator.deputy?.firstName ?? 'vorhanden'}\n'
-                          'Status: ${calendar.status}\n'
-                          'Erstellt am: ${calendar.createdAt}\n'
-                          'Priorität: ${creator.priority?.points}',
-                          style: const TextStyle(
-                            fontSize: StyleGuide.kTextSizeMedium,
-                            color: StyleGuide.kColorWhite,
-                          ),
-                        ),
-                        //setzt Id um den Eintrag zu akzeptieren oder abzulehnen
-                        onTap: () {
-                          setState(() {
-                            CalendarId = calendar.id;
-                            selectedCalendarIndex = index;
-                          });
-                        },
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              iconSize: 32,
-                              color: StyleGuide.kColorRed,
-                              onPressed: () {
-                                declineEntry(calendar.id);
-                              },
-                              icon: const Icon(Icons.close),
+                          leading: const Icon(Icons.calendar_today),
+                          title: Text(
+                            '${calendar.title}',
+                            style: const TextStyle(
+                              fontSize: StyleGuide.kTextSizeLarge,
+                              color: StyleGuide.kColorWhite,
+                              fontWeight: FontWeight.bold,
                             ),
-                            // Wenn der Status KEINE_STELLVERTRETUNG ist wird eine Warnung angezeigt damit der Benutzer nochmals darauf hingewisen ist
-                            IconButton(
-                              iconSize: 32,
-                              color: StyleGuide.kColorPrimaryGreen,
-                              onPressed: () {
-                                if (calendar.status ==
-                                    'KEINE_STELLVERTRETUNG') {
-                                  showDialog<void>(
-                                    context: context,
-                                    barrierDismissible:
-                                        false, // Benutzer muss Dialog schließen
-                                    builder: (BuildContext dialogContext) {
-                                      return AlertDialog(
-                                        title: const Text('Bestätigung'),
-                                        content: const Text(
-                                            'Bist du sicher das du diesen Eintrag akzeptieren möchtest?, es gibt keine Stellvertretung'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      StyleGuide
-                                                          .kColorPrimaryGreen),
-                                              shape: MaterialStateProperty.all(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          16.0),
+                          ),
+                          subtitle: Text(
+                            'Ersteller: ${creator.firstName} ${creator.lastName} \n'
+                            'Ferien Datum: ${calendar.startDate} - ${calendar.endDate}\n'
+                            'Stellvertretung: ${creator.deputy?.firstName ?? 'nicht'} ${creator.deputy?.firstName ?? 'vorhanden'}\n'
+                            'Status: ${calendar.status}\n'
+                            'Erstellt am: ${calendar.createdAt}\n'
+                            'Priorität: ${creator.priority?.points}',
+                            style: const TextStyle(
+                              fontSize: StyleGuide.kTextSizeMedium,
+                              color: StyleGuide.kColorWhite,
+                            ),
+                          ),
+                          //setzt Id um den Eintrag zu akzeptieren oder abzulehnen
+                          onTap: () {
+                            setState(() {
+                              CalendarId = calendar.id;
+                              selectedCalendarIndex = index;
+                            });
+                          },
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                iconSize: 32,
+                                color: StyleGuide.kColorRed,
+                                onPressed: () {
+                                  declineEntry(calendar.id);
+                                },
+                                icon: const Icon(Icons.close),
+                              ),
+                              // Wenn der Status KEINE_STELLVERTRETUNG ist wird eine Warnung angezeigt damit der Benutzer nochmals darauf hingewisen ist
+                              IconButton(
+                                iconSize: 32,
+                                color: StyleGuide.kColorPrimaryGreen,
+                                onPressed: () {
+                                  if (calendar.status ==
+                                      'KEINE_STELLVERTRETUNG') {
+                                    showDialog<void>(
+                                      context: context,
+                                      barrierDismissible:
+                                          false, // Benutzer muss Dialog schließen
+                                      builder: (BuildContext dialogContext) {
+                                        return AlertDialog(
+                                          title: const Text('Bestätigung'),
+                                          content: const Text(
+                                              'Bist du sicher das du diesen Eintrag akzeptieren möchtest?, es gibt keine Stellvertretung'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        StyleGuide
+                                                            .kColorPrimaryGreen),
+                                                shape:
+                                                    MaterialStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16.0),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            child: const Text(
-                                              'Ja',
-                                              style: TextStyle(
-                                                  color: StyleGuide
-                                                      .kColorSecondaryBlue),
-                                            ),
-                                            onPressed: () {
-                                              acceptEntry(calendar.id);
-                                              Get.back();
-                                            },
-                                          ),
-                                          TextButton(
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      StyleGuide.kColorGrey),
-                                              shape: MaterialStateProperty.all(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          16.0),
-                                                ),
-                                              ),
-                                            ),
-                                            child: const Text('Abbrechen',
+                                              child: const Text(
+                                                'Ja',
                                                 style: TextStyle(
                                                     color: StyleGuide
-                                                        .kColorSecondaryBlue)),
-                                            onPressed: () {
-                                              Get.back();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  acceptEntry(calendar.id);
-                                }
-                              },
-                              icon: const Icon(Icons.check),
-                            ),
-                            //Löschen von einträgen
-                            IconButton(
-                              iconSize: 32,
-                              color: StyleGuide.kColorBlack,
-                              onPressed: () {
-                                //TODO: Provisorisch bis Zeit da ist um es korrekt zu implementieren
-                                HttpService()
-                                    .removeCalendarEntryFromList(calendar.id);
-                                setState(() {
-                                  calendarEntries.removeAt(index);
-                                });
-                              },
-                              icon: const Icon(Icons.delete),
-                            ),
-                          ],
+                                                        .kColorSecondaryBlue),
+                                              ),
+                                              onPressed: () {
+                                                acceptEntry(calendar.id);
+                                                Get.back();
+                                              },
+                                            ),
+                                            TextButton(
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        StyleGuide.kColorGrey),
+                                                shape:
+                                                    MaterialStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16.0),
+                                                  ),
+                                                ),
+                                              ),
+                                              child: const Text('Abbrechen',
+                                                  style: TextStyle(
+                                                      color: StyleGuide
+                                                          .kColorSecondaryBlue)),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    acceptEntry(calendar.id);
+                                  }
+                                },
+                                icon: const Icon(Icons.check),
+                              ),
+                              //Löschen von einträgen
+                              IconButton(
+                                iconSize: 32,
+                                color: StyleGuide.kColorBlack,
+                                onPressed: () {
+                                  //TODO: Provisorisch bis Zeit da ist um es korrekt zu implementieren
+                                  HttpService()
+                                      .removeCalendarEntryFromList(calendar.id);
+                                  setState(() {
+                                    calendarEntries.removeAt(index);
+                                  });
+                                },
+                                icon: const Icon(Icons.delete),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    return Container();
+                  }
                 },
               ),
             ),
