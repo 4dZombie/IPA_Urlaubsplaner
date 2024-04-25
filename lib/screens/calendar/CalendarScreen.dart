@@ -1,6 +1,9 @@
 //Import von Drittanbietern
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ipa_urlaubsplaner/widgets/color/StatusColor.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 //Import von meinen Dateien
@@ -31,12 +34,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
   List<DateTime> selectedDays = [];
-  late List<CalendarEvent> _events = [];
+  late List<CalendarEvent> events = [];
   late Future<User> currentUser;
   final kFirstDay = DateTime.utc(2024, 01, 01);
   final kLastDay = DateTime.utc(2050, 12, 31);
   var _calendarFormat = CalendarFormat.month;
   String? calendarId;
+
+  //Bespiel feiertage
+  Map<DateTime, List<String>> holidays = {
+    DateTime(2024, 05, 01): ['Tag der Arbeit'],
+    DateTime(2024, 05, 09): ['Auffahrt'],
+    DateTime(2024, 05, 20): ['Pfingstmontag'],
+  };
 
   ///[initState] wird aufgerufen wenn das Widget erstellt wird
   ///Es wird der aktuelle User geladen mit der Methode [getCurrentUserId]
@@ -51,12 +61,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
   ///[loadUserCalendars] wird aufgerufen wenn die Kalender des Users geladen werden
   ///Es wird ein API Request gemacht um die Kalender des Users zu laden
   ///Die Kalender werden in eine Liste von Events konvertiert
-  ///Die Events werden in die Liste [_events] gespeichert
+  ///Die Events werden in die Liste [events] gespeichert
   Future<void> loadUserCalendars() async {
     try {
       List<Calendar> calendars = await HttpService().userCalendar();
       setState(() {
-        _events = calendars
+        events = calendars
             .map((calendar) => CalendarEvent.fromCalendar(calendar))
             .toList();
       });
@@ -72,16 +82,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return ListView.builder(
       //Anzahl der Events ensprechen der Anzahl der Events in der Liste
       //ItemBuilder erstellt ein ListTile für jedes Event
-      itemCount: _events.length,
+      itemCount: events.length,
       itemBuilder: (BuildContext context, int index) {
-        final event = _events[index];
+        final event = events[index];
         return Padding(
           padding: StyleGuide.kPaddingHorizontal,
           child: Card(
-            color: StyleGuide.kColorSecondaryBlue,
+            color: getStatusColor().tileColor(event.status),
             child: ListTile(
               title: Text(
-                '${event.title}',
+                event.title,
                 style: const TextStyle(
                   color: StyleGuide.kColorWhite,
                 ),
@@ -125,12 +135,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               //Klickbares Icon um eintrag zu löschen
               //TODO: Aktuell nur von Liste gelöscht, nicht von DB
               trailing: IconButton(
-                color: StyleGuide.kColorRed,
+                color: StyleGuide.kColorWhite,
                 onPressed: () {
-                  //TODO: Provisorisch bis Zeit da ist um es korrekt zu implementieren
                   HttpService().removeCalendarEntryFromList(event.id ?? "");
                   setState(() {
-                    _events.removeAt(index);
+                    events.removeAt(index);
                   });
                 },
                 icon: const Icon(Icons.delete),
@@ -296,7 +305,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       bool success = await HttpService().createCalendarEntry(title, start, end);
       setState(() {
         if (success) {
-          _events.add(newEvent);
+          events.add(newEvent);
           ScaffoldMessenger.of(Get.context!)
               .showSnackBar(StyleGuide.kSnackBarCreatedSuccess);
         } else {
@@ -363,7 +372,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               flex: 1,
               child: TableCalendar(
                 //locale: 'de_DE', //TODO: Inizialisierung von LocalDate, funtioniert aktuell nicht
-                focusedDay: DateTime.now(), //Heutiges Datum
+                focusedDay: _focusedDay, //Heutiges Datum
                 firstDay: kFirstDay, //Erster und letzter Tag des Kalenders
                 lastDay: kLastDay, //Erster und letzter Tag des Kalenders
                 rangeStartDay: _rangeStart,
@@ -430,8 +439,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   cellMargin: EdgeInsets.all(4.0),
                   markersMaxCount: 1, //Maximale Anzahl an Markern
                   markerSize: 12,
+                  //Aktuell Statische Farbe, wird nach der IPA Präsentation umgebaut und mit Providern status geholt und dementsprechend farblich angezeigt
+                  //Diese änderung ist jedoch zu gross um vor ende der IPA einzubauen
                   markerDecoration: BoxDecoration(
-                    color: StyleGuide.kColorRed,
+                    color: StyleGuide.kColorSecondaryBlue,
                     shape: BoxShape.circle,
                   ),
                   defaultTextStyle: TextStyle(
@@ -443,15 +454,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
 
                 //[eventLoader] wird aufgerufen wenn ein Event geladen wird
-                // Es wird überprüft ob das Event am ausgewählten Tag ist wenn ja wird es angezeigt und zurückgegeben
+                // Es wird überprüft ob das Event am ausgewählten Tag ist wenn ja wird es angezeigt und zurückgegeben(Rote Markierung)
+                //IN der Zukunft vorallem auch genutzt um Feiertage anzuzeigen
                 eventLoader: (day) {
-                  final eventsFromDay = _events
+                  final eventsFromDay = events
                       .where((event) =>
                           isSameDay(event.startDate, day) ||
                           (event.startDate.isBefore(day) &&
                               event.endDate.isAfter(day)) ||
                           (isSameDay(event.endDate, day)))
                       .toList();
+                  //Iterable, Geht durch die holiday liste nimmt sich überall wo day drin ist die infos raus und mapt diese mit titel zu einem CalendarEvent
+                  if (holidays.containsKey(day)) {
+                    eventsFromDay
+                        .addAll(holidays[day]!.map((title) => CalendarEvent(
+                              title: title,
+                              startDate: day,
+                              endDate: day,
+                              status: 'holiday',
+                            )));
+                  }
+                  // Aktuell keine wirkliche Relevants ausser das es von der IDE teile verlangte
+                  //also habe ich diese gleich komplett angezeigt aktuell nicht ersichtlich in dieser Form weil nur ein Eventmarker angezeigt wird
+                  // Zukünftig soll der Kalender "Ausklappbar" sein wo das wichtig wird
+                  //Missachtet also bewusst YAGNI Pattern
                   return eventsFromDay
                       .map((event) => CalendarEvent(
                             id: event.id,
@@ -465,13 +491,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 },
                 onFormatChanged: (format) {
                   //Ändert das Format des Kalenders
+                  //Standard ist 1 Monat  wenn der Button gedrückt wird um das Format auf 2 Wochen oder 1 Woche zu wechseln
+                  // lade den Kalender neu
                   setState(() {
                     if (_calendarFormat != format) _calendarFormat = format;
                   });
                 },
                 onDaySelected: (selectedDay, focusedDay) {
                   setState(() {
+                    // Damit sich nicht bei jedem Klick der Kalender auf den Standard Monat resettet
                     _focusedDay = focusedDay;
+                    _selectedDay = selectedDay;
 
                     ///Checkt ob das ausgewählte Datum bereits ausgewählt ist
                     if (selectedDays.contains(selectedDay)) {
@@ -505,7 +535,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ///Die Tage die Samstag und Sonntag sind werden grau dargestellt
                 calendarBuilders: CalendarBuilders(
                     defaultBuilder: (context, day, focusedDay) {
-                  if (day.weekday == 6 || day.weekday == 7) {
+                  //TODO: Funktioniert aktuell nicht das es angezeigt wird, falls zeit da ist machen ist ein Nice to have
+                  if (events.any((event) => event.status == 'holiday')) {
+                    return Positioned(
+                      right: 1,
+                      bottom: 1,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.yellow,
+                        ),
+                        width: 8,
+                        height: 8,
+                      ),
+                    );
+                  } else if (day.weekday == 6 || day.weekday == 7) {
                     return Container(
                       alignment: Alignment.center,
                       child: Text(
@@ -527,9 +571,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Expanded(
                   flex: 1,
                   child: Text(
-                      'Übrige Urlaubstage: ${user.holiday ?? 'Konnte nicht geladen werden'}'),
+                    'Übrige Urlaubstage: ${user.holiday ?? 'Konnte nicht geladen werden'}',
+                    style: const TextStyle(
+                      fontSize: StyleGuide.kTextSizeMedium,
+                      color: StyleGuide.kColorSecondaryBlue,
+                    ),
+                  ),
                 ),
                 // Zeigt User seine verfügbaren Ferientage die er übrig hat
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Get.toNamed('/settings');
+                      },
+                      child: const Text(
+                        'Hast du noch keine Stellvertretung hinterlegt? Klicke hier!',
+                        style: TextStyle(
+                            fontSize: StyleGuide.kTextSizeSmall,
+                            color: StyleGuide.kColorLink),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
             Expanded(

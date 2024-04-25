@@ -15,7 +15,7 @@ class StyleGuide {
   static const kColorGrey = Color.fromRGBO(196, 196, 196, 1);
   static const kColorLink = Color.fromRGBO(40, 163, 233, 1);
   static const kColorOrange = Color.fromRGBO(255, 165, 0, 1);
-  static const kColorSecondaryYellow = Color.fromRGBO(255, 255, 0, 1);
+  static const kColorYellow = Color.fromRGBO(255, 255, 0, 1);
 
   //Appbars für die verschiedenen Screens mit der Pflicht einen Titel anzugeben
 
