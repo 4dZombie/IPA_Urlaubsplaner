@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../constants/style_guide/StyleGuide.dart';
+import '../../widgets/color/StatusColor.dart';
 import 'Calendar.dart';
 
 /// Model für Kalendereinträge
@@ -29,19 +29,21 @@ class CalendarEvent extends StatelessWidget {
       startDate: DateTime.parse(calendar.startDate),
       endDate: DateTime.parse(calendar.endDate),
       //userDeputy: calendar.userName,
-      //status: calendar.status,
+      status: calendar.status,
     );
   }
 
   ///[EventMarker] erstellt Marker für jeden Tag des Events und fügt sie der Liste hinzu
+  ///Farbe wird vom Kalender überschrieben ist aber hier als Defaultwert
   @override
   Widget build(BuildContext context) {
+    Color color = getStatusColor().tileColor(status);
     return Container(
       width: 10,
       height: 10,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: StyleGuide.kColorRed,
+        color: color,
       ),
     );
   }
