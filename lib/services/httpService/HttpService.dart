@@ -200,8 +200,8 @@ class HttpService {
     String districtNumberTrimmed = districtNumber.trim();
     String districtNameTrimmed = districtName.trim();
     String rankTrimmed = rank.trim();
-    bool kidsTrimmed = kids ?? false;
-    bool studentTrimmed = student ?? false;
+    bool kidsTrimmed = kids;
+    bool studentTrimmed = student;
     String employmentTrimmed = employment.trim();
 
     String apiUrl = '$baseUrl/users/register';
@@ -454,11 +454,60 @@ class HttpService {
 
   ///Einstellungen
 
-  // Future<> setDeputy(String id){
-  //   String apiUrl = '$apiKey/calendar';
-  // }
-  //
-  // Future<> setAdmin(String id){
-  //   String apiUrl = '$apiKey/calendar';
-  // }
+  Future<bool> setDeputy(String id) async {
+    String apiUrl = '$apiKey/users/$id/deputy';
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+        body: jsonEncode({'deputyId': id}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error setting deputy: $error');
+    }
+    return false;
+  }
+
+  Future<bool> setAdmin(String id) async {
+    String apiUrl = '$apiKey/users/$id/role';
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+        body: jsonEncode({'name': 'ADMIN'}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error setting deputy: $error');
+    }
+    return false;
+  }
+
+  Future<bool> setClient(String id) async {
+    String apiUrl = '$apiKey/users/$id/role';
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+        body: jsonEncode({'name': 'CLIENT'}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error setting deputy: $error');
+    }
+    return false;
+  }
 }

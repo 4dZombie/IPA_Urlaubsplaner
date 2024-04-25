@@ -15,7 +15,7 @@ class getStatusColor {
       case 'VORLAEUFIG_AKZEPTIERT':
         return StyleGuide.kColorSecondaryBlue;
       case 'VORLAEUFIG_ABGELEHNT':
-        return StyleGuide.kColorSecondaryYellow;
+        return StyleGuide.kColorYellow;
       default:
         return StyleGuide.kColorGrey;
     }

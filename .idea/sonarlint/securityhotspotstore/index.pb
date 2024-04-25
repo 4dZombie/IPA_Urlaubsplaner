@@ -100,3 +100,11 @@ R
 "lib/widgets/color/StatusColor.dart,9\6\9696a75740c848a284179bf37204aa7f61c5d21c
 M
 lib/models/user/Priority.dart,a\f\af17254053c012a90a570eafddea0db53496696d
+a
+1lib/widgets/buttons/verfication/AcceptButton.dart,2\d\2d1c127aba3b7c45184c7b64dc306682747f6bcb
+a
+1lib/widgets/buttons/verfication/CancelButton.dart,1\0\1092281d05755f588e1adf1043a9e7bfa370ff07
+b
+2lib/widgets/buttons/verfication/ApproveButton.dart,a\c\ac82f34a4bde5f2f7f6dbd31fdfc621ac9626795
+b
+2lib/widgets/buttons/verfication/DeclineButton.dart,2\4\24376263d287003a749887801ba2a4fc75d076ab
