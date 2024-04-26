@@ -74,8 +74,6 @@ o
 ?lib/widgets/textformfields/dropdowns/DropDownTextFormField.dart,d\6\d67b0613a67eaff2dc9a6bd555a76d0d2ef9c83f
 I
 lib/models/user/User.dart,4\4\445d2310022039e9556c80ac06b740b062b75b56
-g
-7lib/widgets/buttons/verfication/VerificationButton.dart,2\3\2362e2c14fa04429f421ff88df37456f6e116347
 X
 (lib/widgets/buttons/save/SaveButton.dart,a\f\af85a3a3d3f0ecc5b52ebceaf95a723a89d47812
 Q
@@ -100,11 +98,3 @@ R
 "lib/widgets/color/StatusColor.dart,9\6\9696a75740c848a284179bf37204aa7f61c5d21c
 M
 lib/models/user/Priority.dart,a\f\af17254053c012a90a570eafddea0db53496696d
-a
-1lib/widgets/buttons/verfication/AcceptButton.dart,2\d\2d1c127aba3b7c45184c7b64dc306682747f6bcb
-a
-1lib/widgets/buttons/verfication/CancelButton.dart,1\0\1092281d05755f588e1adf1043a9e7bfa370ff07
-b
-2lib/widgets/buttons/verfication/ApproveButton.dart,a\c\ac82f34a4bde5f2f7f6dbd31fdfc621ac9626795
-b
-2lib/widgets/buttons/verfication/DeclineButton.dart,2\4\24376263d287003a749887801ba2a4fc75d076ab
