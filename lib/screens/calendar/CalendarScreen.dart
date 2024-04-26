@@ -114,7 +114,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       //TODO: wenn möglich stellvertretung angeben
                       return Text(
                         '${event.startDate.toIso8601String().split('T')[0]} - ${event.endDate.toIso8601String().split('T')[0]} '
-                        '\n (${calendar.status})',
+                        '\n Status: ${calendar.status}',
                         style: const TextStyle(
                           color: StyleGuide.kColorWhite,
                         ),
@@ -571,7 +571,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    'Übrige Urlaubstage: ${user.holiday ?? 'Konnte nicht geladen werden'}',
+                    'Übrige Urlaubstage: ${user.holiday ?? 'Konnte nicht geladen werden'}\n Stellvertretung: ${user.deputy?.firstName ?? 'Keine hinterlegt'} ${user.deputy?.lastName ?? 'Stellvertretung'}',
                     style: const TextStyle(
                       fontSize: StyleGuide.kTextSizeMedium,
                       color: StyleGuide.kColorSecondaryBlue,
