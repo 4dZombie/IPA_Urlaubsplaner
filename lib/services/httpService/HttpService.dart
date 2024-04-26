@@ -429,16 +429,13 @@ class HttpService {
   }
 
   /// [removeCalendarEntryFromList] entfernt den Kalendereintrag aus der Liste
+  /// Noch unbekannterfehler macht es dass der Eintrag in der DB nicht gelöscht wird
   Future<void> removeCalendarEntryFromList(String id) async {
     String apiUrl = "$apiKey/calendar/$id";
-    final Map<String, dynamic> data = {
-      'id': id,
-    };
     try {
       final response = await http.delete(
         Uri.parse(apiUrl),
         headers: await getHeaders(),
-        body: jsonEncode(data),
       );
       if (response.statusCode == 204) {
         print('Calendar entry removed successfully!');
@@ -454,8 +451,10 @@ class HttpService {
 
   ///Einstellungen
 
+  /// [setDeputy] setzt den Stellvertreter
   Future<bool> setDeputy(String id) async {
-    String apiUrl = '$apiKey/users/$id/deputy';
+    String? currentUserId = extractUserId(await getAccessToken());
+    String apiUrl = '$apiKey/users/$currentUserId/deputy';
     try {
       final response = await http.put(
         Uri.parse(apiUrl),
@@ -473,6 +472,7 @@ class HttpService {
     return false;
   }
 
+  /// [setAdmin] setzt den Admin
   Future<bool> setAdmin(String id) async {
     String apiUrl = '$apiKey/users/$id/role';
     try {
@@ -487,11 +487,12 @@ class HttpService {
         throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (error) {
-      print('Error setting deputy: $error');
+      print('Error setting role: $error');
     }
     return false;
   }
 
+  /// [setClient] setzt die Rolle auf Client
   Future<bool> setClient(String id) async {
     String apiUrl = '$apiKey/users/$id/role';
     try {
@@ -506,7 +507,31 @@ class HttpService {
         throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (error) {
-      print('Error setting deputy: $error');
+      print('Error setting role: $error');
+    }
+    return false;
+  }
+
+  /// [setHolidays] setzt die Ferien
+  /// Funktioniert aktuell noch nicht mit dem Backend zusammen weil es dort nur möglich ist die gesammten Benutzerdaten zu ändern und nicht einzelne Felder
+  Future<bool> setHolidays(String id, String holiday) async {
+    String apiUrl = '$apiKey/users/$id';
+    String holidayTrimmed = holiday.trim();
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: await getHeaders(),
+        body: jsonEncode({
+          'holiday': double.tryParse(holidayTrimmed),
+        }),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        throw ('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('Error setting holiday: $error');
     }
     return false;
   }

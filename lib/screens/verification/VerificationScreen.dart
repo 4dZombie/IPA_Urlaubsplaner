@@ -142,33 +142,38 @@ class _VerificationScreenState extends State<VerificationScreen> {
             if (isUserAdmin) {
               return buildVerification(currentUser);
             } else {
-              return Column(
-                children: [
-                  const Center(
-                    child: Text(
-                      'Keine Berechtigung auf diese Seite',
-                      style: TextStyle(
-                          color: StyleGuide.kColorRed,
-                          fontSize: StyleGuide.kTextSizeExxxtraLarge),
-                    ),
+              return Scaffold(
+                body: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    children: [
+                      const Center(
+                        child: Text(
+                          'Keine Berechtigung auf diese Seite!',
+                          style: TextStyle(
+                              color: StyleGuide.kColorRed,
+                              fontSize: StyleGuide.kTextSizeExxxtraLarge),
+                        ),
+                      ),
+                      StyleGuide.SizeBoxHeight32,
+                      TextButton(
+                        onPressed: () {
+                          Get.toNamed('/calendar');
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              StyleGuide.kColorSecondaryBlue),
+                        ),
+                        child: const Text(
+                          'Zurück zur Startseite',
+                          style: TextStyle(
+                              color: StyleGuide.kColorWhite,
+                              fontSize: StyleGuide.kTextSizeLarge),
+                        ),
+                      ),
+                    ],
                   ),
-                  StyleGuide.SizeBoxHeight32,
-                  TextButton(
-                    onPressed: () {
-                      Get.toNamed('/calendar');
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          StyleGuide.kColorSecondaryBlue),
-                    ),
-                    child: const Text(
-                      'Zurück zur Startseite',
-                      style: TextStyle(
-                          color: StyleGuide.kColorWhite,
-                          fontSize: StyleGuide.kTextSizeLarge),
-                    ),
-                  ),
-                ],
+                ),
               );
             }
           } else {
@@ -268,7 +273,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           subtitle: Text(
                             'Ersteller: ${creator.firstName} ${creator.lastName} \n'
                             'Ferien Datum: ${calendar.startDate} - ${calendar.endDate}\n'
-                            'Stellvertretung: ${creator.deputy?.firstName ?? 'nicht'} ${creator.deputy?.firstName ?? 'vorhanden'}\n'
+                            'Stellvertretung: ${creator.deputy?.firstName ?? 'nicht'} ${creator.deputy?.lastName ?? 'vorhanden'}\n'
                             'Status: ${calendar.status}\n'
                             'Erstellt am: ${calendar.createdAt}\n'
                             'Priorität: ${creator.priority?.points}',
@@ -293,7 +298,15 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                 onPressed: () {
                                   declineEntry(calendar.id);
                                 },
-                                icon: const Icon(Icons.close),
+                                icon: const Icon(
+                                  Icons.close,
+                                  shadows: [
+                                    BoxShadow(
+                                      color: StyleGuide.kColorBlack,
+                                      spreadRadius: 10,
+                                    ),
+                                  ],
+                                ),
                               ),
                               // Wenn der Status KEINE_STELLVERTRETUNG ist wird eine Warnung angezeigt damit der Benutzer nochmals darauf hingewisen ist
                               IconButton(
@@ -368,7 +381,15 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                     acceptEntry(calendar.id);
                                   }
                                 },
-                                icon: const Icon(Icons.check),
+                                icon: const Icon(
+                                  Icons.check,
+                                  shadows: [
+                                    BoxShadow(
+                                      color: StyleGuide.kColorBlack,
+                                      spreadRadius: 10,
+                                    ),
+                                  ],
+                                ),
                               ),
                               //Löschen von einträgen
                               IconButton(
@@ -382,7 +403,15 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                     calendarEntries.removeAt(index);
                                   });
                                 },
-                                icon: const Icon(Icons.delete),
+                                icon: const Icon(
+                                  Icons.delete,
+                                  shadows: [
+                                    BoxShadow(
+                                      color: StyleGuide.kColorBlack,
+                                      spreadRadius: 10,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
