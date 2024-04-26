@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ipa_urlaubsplaner/constants/style_guide/StyleGuide.dart';
 import 'package:ipa_urlaubsplaner/services/httpService/HttpService.dart';
@@ -18,6 +19,16 @@ class _SettingScreenState extends State<SettingScreen> {
   User? selectedUser;
   late Future<User> currentUser;
   String? selectedUserId;
+  final TextEditingController holidayController = TextEditingController();
+
+  /// [dispose] wird aufgerufen wenn das Widget zerstört wird
+  /// [holidayController] wird gelöscht
+  /// Das ist wichtig um Memoryleaks zu vermeiden
+  @override
+  void dispose() {
+    holidayController.dispose();
+    super.dispose();
+  }
 
   ///[initState] wird aufgerufen wenn das Widget erstellt wird
   ///Es wird der aktuelle User geladen [getCurrentUserId]
@@ -65,6 +76,8 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
+  ///[buildSettings] baut die Seite auf
+  ///[User user] wird übergeben damit die App weiss welcher User eingeloggt ist
   @override
   Widget buildSettings(User user) {
     /// Wie in der [HistoryScreen] wird hier überprüft ob der User Admin ist
@@ -123,7 +136,36 @@ class _SettingScreenState extends State<SettingScreen> {
                 ],
               ),
             ),
-            StyleGuide.SizeBoxHeight16,
+
+            ///[holidayController] wird verwendet um die Urlaubstage zu speichern
+            if (isUserAdmin) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      controller: holidayController,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 .]')),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      decoration: StyleGuide.kInputDecoration(
+                        label: 'Urlaubstage',
+                        hint: 'Urlaubstage',
+                        isMandatory: false,
+                      ),
+                      style: const TextStyle(
+                        fontSize: StyleGuide.kTextSizeMedium,
+                        color: StyleGuide.kColorSecondaryBlue,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             Padding(
               padding: StyleGuide.kPaddingAll,
               child: Row(
@@ -152,7 +194,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: const Text(
                       'Setzt Benutzer zur Stellvertretung',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: StyleGuide.kTextSizeMedium,
+                      ),
                     ),
                   ),
 
@@ -179,7 +224,10 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       child: const Text(
                         'Setzt Benutzer zur Admin Rolle',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: StyleGuide.kTextSizeMedium,
+                        ),
                       ),
                     ),
                     TextButton(
@@ -203,7 +251,39 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       child: const Text(
                         'Setzt Benutzer zur Client Rolle',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: StyleGuide.kTextSizeMedium,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if (selectedUser != null) {
+                          String userId = selectedUser!.id;
+                          HttpService()
+                              .setHolidays(userId, holidayController.text)
+                              .then((success) {
+                            if (success == true) {
+                              ScaffoldMessenger.of(Get.context!)
+                                  .showSnackBar(StyleGuide.kSnackBarSuccess);
+                            } else {
+                              ScaffoldMessenger.of(Get.context!)
+                                  .showSnackBar(StyleGuide.kSnackBarError);
+                            }
+                          });
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            StyleGuide.kColorPrimaryGreen),
+                      ),
+                      child: const Text(
+                        'Speichere Benutzer Urlaubstage',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: StyleGuide.kTextSizeMedium,
+                        ),
                       ),
                     ),
                   ]
