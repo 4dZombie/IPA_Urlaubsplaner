@@ -370,199 +370,201 @@ class _CalendarScreenState extends State<CalendarScreen> {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: TableCalendar(
-                //locale: 'de_DE', //TODO: Inizialisierung von LocalDate, funtioniert aktuell nicht
-                focusedDay: _focusedDay, //Heutiges Datum
-                firstDay: kFirstDay, //Erster und letzter Tag des Kalenders
-                lastDay: kLastDay, //Erster und letzter Tag des Kalenders
-                rangeStartDay: _rangeStart,
-                rangeEndDay: _rangeEnd,
-                onRangeSelected: onRangeSelected,
-                rangeSelectionMode: RangeSelectionMode.toggledOn,
-                startingDayOfWeek: StartingDayOfWeek
-                    .monday, // Wochenstart ist Montag: Standard ist Sonntag
-                currentDay: DateTime.now(), //Heutiges Datum
-                calendarFormat:
-                    _calendarFormat, //Format des Kalenders (Standard 1 Monat)
-
-                ///Kalender Banner Styling (Farben, Formen & Schriftarten)
-                headerStyle: HeaderStyle(
-                  titleCentered: true,
-                  formatButtonVisible:
-                      true, //Um das Format zu ändern (1 Monat, 2 Woche & 1 Woche)
-                  formatButtonTextStyle: const TextStyle(
-                    color: StyleGuide.kColorSecondaryBlue,
+              child: SingleChildScrollView(
+                child: TableCalendar(
+                  //locale: 'de_DE', //TODO: Inizialisierung von LocalDate, funtioniert aktuell nicht
+                  focusedDay: _focusedDay, //Heutiges Datum
+                  firstDay: kFirstDay, //Erster und letzter Tag des Kalenders
+                  lastDay: kLastDay, //Erster und letzter Tag des Kalenders
+                  rangeStartDay: _rangeStart,
+                  rangeEndDay: _rangeEnd,
+                  onRangeSelected: onRangeSelected,
+                  rangeSelectionMode: RangeSelectionMode.toggledOn,
+                  startingDayOfWeek: StartingDayOfWeek
+                      .monday, // Wochenstart ist Montag: Standard ist Sonntag
+                  currentDay: DateTime.now(), //Heutiges Datum
+                  calendarFormat:
+                      _calendarFormat, //Format des Kalenders (Standard 1 Monat)
+                
+                  ///Kalender Banner Styling (Farben, Formen & Schriftarten)
+                  headerStyle: HeaderStyle(
+                    titleCentered: true,
+                    formatButtonVisible:
+                        true, //Um das Format zu ändern (1 Monat, 2 Woche & 1 Woche)
+                    formatButtonTextStyle: const TextStyle(
+                      color: StyleGuide.kColorSecondaryBlue,
+                    ),
+                    titleTextStyle: const TextStyle(
+                      color: StyleGuide.kColorSecondaryBlue,
+                    ),
+                    formatButtonDecoration: BoxDecoration(
+                      color: StyleGuide.kColorPrimaryGreen,
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    leftChevronIcon: const Icon(
+                      Icons.chevron_left,
+                      color: StyleGuide.kColorPrimaryGreen,
+                    ),
+                    rightChevronIcon: const Icon(
+                      Icons.chevron_right,
+                      color: StyleGuide.kColorPrimaryGreen,
+                    ),
                   ),
-                  titleTextStyle: const TextStyle(
-                    color: StyleGuide.kColorSecondaryBlue,
+                
+                  ///Kalender Styling (Farben, Formen & Schriftarten)
+                  calendarStyle: const CalendarStyle(
+                    todayDecoration: BoxDecoration(
+                      color: StyleGuide.kColorPrimaryGreen,
+                      shape: BoxShape.circle,
+                    ),
+                    selectedDecoration: BoxDecoration(
+                      color: StyleGuide.kColorSecondaryBlue,
+                      shape: BoxShape.circle,
+                    ),
+                    selectedTextStyle: TextStyle(
+                      color: StyleGuide.kColorSecondaryBlue,
+                    ),
+                    todayTextStyle: TextStyle(
+                      color: StyleGuide.kColorWhite,
+                    ),
+                    rangeStartDecoration: BoxDecoration(
+                      color: StyleGuide.kColorGrey,
+                      shape: BoxShape.circle,
+                    ),
+                    rangeEndDecoration: BoxDecoration(
+                      color: StyleGuide.kColorGrey,
+                      shape: BoxShape.circle,
+                    ),
+                    rangeHighlightColor: StyleGuide.kColorGrey,
+                    outsideDaysVisible: true, //Ausserhalb des Monats sichtbar
+                    cellMargin: EdgeInsets.all(4.0),
+                    markersMaxCount: 1, //Maximale Anzahl an Markern
+                    markerSize: 12,
+                    //Aktuell Statische Farbe, wird nach der IPA Präsentation umgebaut und mit Providern status geholt und dementsprechend farblich angezeigt
+                    //Diese änderung ist jedoch zu gross um vor ende der IPA einzubauen
+                    markerDecoration: BoxDecoration(
+                      color: StyleGuide.kColorSecondaryBlue,
+                      shape: BoxShape.circle,
+                    ),
+                    defaultTextStyle: TextStyle(
+                      color: StyleGuide.kColorSecondaryBlue,
+                    ),
+                    weekendTextStyle: TextStyle(
+                      color: StyleGuide.kColorGrey,
+                    ),
                   ),
-                  formatButtonDecoration: BoxDecoration(
-                    color: StyleGuide.kColorPrimaryGreen,
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  leftChevronIcon: const Icon(
-                    Icons.chevron_left,
-                    color: StyleGuide.kColorPrimaryGreen,
-                  ),
-                  rightChevronIcon: const Icon(
-                    Icons.chevron_right,
-                    color: StyleGuide.kColorPrimaryGreen,
-                  ),
-                ),
-
-                ///Kalender Styling (Farben, Formen & Schriftarten)
-                calendarStyle: const CalendarStyle(
-                  todayDecoration: BoxDecoration(
-                    color: StyleGuide.kColorPrimaryGreen,
-                    shape: BoxShape.circle,
-                  ),
-                  selectedDecoration: BoxDecoration(
-                    color: StyleGuide.kColorSecondaryBlue,
-                    shape: BoxShape.circle,
-                  ),
-                  selectedTextStyle: TextStyle(
-                    color: StyleGuide.kColorSecondaryBlue,
-                  ),
-                  todayTextStyle: TextStyle(
-                    color: StyleGuide.kColorWhite,
-                  ),
-                  rangeStartDecoration: BoxDecoration(
-                    color: StyleGuide.kColorGrey,
-                    shape: BoxShape.circle,
-                  ),
-                  rangeEndDecoration: BoxDecoration(
-                    color: StyleGuide.kColorGrey,
-                    shape: BoxShape.circle,
-                  ),
-                  rangeHighlightColor: StyleGuide.kColorGrey,
-                  outsideDaysVisible: true, //Ausserhalb des Monats sichtbar
-                  cellMargin: EdgeInsets.all(4.0),
-                  markersMaxCount: 1, //Maximale Anzahl an Markern
-                  markerSize: 12,
-                  //Aktuell Statische Farbe, wird nach der IPA Präsentation umgebaut und mit Providern status geholt und dementsprechend farblich angezeigt
-                  //Diese änderung ist jedoch zu gross um vor ende der IPA einzubauen
-                  markerDecoration: BoxDecoration(
-                    color: StyleGuide.kColorSecondaryBlue,
-                    shape: BoxShape.circle,
-                  ),
-                  defaultTextStyle: TextStyle(
-                    color: StyleGuide.kColorSecondaryBlue,
-                  ),
-                  weekendTextStyle: TextStyle(
-                    color: StyleGuide.kColorGrey,
-                  ),
-                ),
-
-                //[eventLoader] wird aufgerufen wenn ein Event geladen wird
-                // Es wird überprüft ob das Event am ausgewählten Tag ist wenn ja wird es angezeigt und zurückgegeben(Rote Markierung)
-                //IN der Zukunft vorallem auch genutzt um Feiertage anzuzeigen
-                eventLoader: (day) {
-                  final eventsFromDay = events
-                      .where((event) =>
-                          isSameDay(event.startDate, day) ||
-                          (event.startDate.isBefore(day) &&
-                              event.endDate.isAfter(day)) ||
-                          (isSameDay(event.endDate, day)))
-                      .toList();
-                  //Iterable, Geht durch die holiday liste nimmt sich überall wo day drin ist die infos raus und mapt diese mit titel zu einem CalendarEvent
-                  if (holidays.containsKey(day)) {
-                    eventsFromDay
-                        .addAll(holidays[day]!.map((title) => CalendarEvent(
-                              title: title,
-                              startDate: day,
-                              endDate: day,
-                              status: 'holiday',
-                            )));
-                  }
-                  // Aktuell keine wirkliche Relevants ausser das es von der IDE teile verlangte
-                  //also habe ich diese gleich komplett angezeigt aktuell nicht ersichtlich in dieser Form weil nur ein Eventmarker angezeigt wird
-                  // Zukünftig soll der Kalender "Ausklappbar" sein wo das wichtig wird
-                  //Missachtet also bewusst YAGNI Pattern
-                  return eventsFromDay
-                      .map((event) => CalendarEvent(
-                            id: event.id,
-                            title: event.title,
-                            startDate: event.startDate,
-                            endDate: event.endDate,
-                            userDeputy: event.userDeputy,
-                            status: event.status,
-                          ))
-                      .toList();
-                },
-                onFormatChanged: (format) {
-                  //Ändert das Format des Kalenders
-                  //Standard ist 1 Monat  wenn der Button gedrückt wird um das Format auf 2 Wochen oder 1 Woche zu wechseln
-                  // lade den Kalender neu
-                  setState(() {
-                    if (_calendarFormat != format) _calendarFormat = format;
-                  });
-                },
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    // Damit sich nicht bei jedem Klick der Kalender auf den Standard Monat resettet
-                    _focusedDay = focusedDay;
-                    _selectedDay = selectedDay;
-
-                    ///Checkt ob das ausgewählte Datum bereits ausgewählt ist
-                    if (selectedDays.contains(selectedDay)) {
-                      ///Wenn ja, wird es entfernt
-                      selectedDays.remove(selectedDay);
-
-                      ///Wenn bereits ein Datum ausgewählt ist, wird das neue Datum hinzugefügt
-                      ///Wenn zwei Daten ausgewählt sind, wird die Auswahl zurückgesetzt
-                      ///und das neue Datum hinzugefügt
-                    } else if (selectedDays.isEmpty ||
-                        selectedDays.any((d) =>
-                            (d.difference(selectedDay).inDays).abs() == 1)) {
-                      selectedDays.add(selectedDay);
-                    } else {
-                      selectedDays = [selectedDay];
+                
+                  //[eventLoader] wird aufgerufen wenn ein Event geladen wird
+                  // Es wird überprüft ob das Event am ausgewählten Tag ist wenn ja wird es angezeigt und zurückgegeben(Rote Markierung)
+                  //IN der Zukunft vorallem auch genutzt um Feiertage anzuzeigen
+                  eventLoader: (day) {
+                    final eventsFromDay = events
+                        .where((event) =>
+                            isSameDay(event.startDate, day) ||
+                            (event.startDate.isBefore(day) &&
+                                event.endDate.isAfter(day)) ||
+                            (isSameDay(event.endDate, day)))
+                        .toList();
+                    //Iterable, Geht durch die holiday liste nimmt sich überall wo day drin ist die infos raus und mapt diese mit titel zu einem CalendarEvent
+                    if (holidays.containsKey(day)) {
+                      eventsFromDay
+                          .addAll(holidays[day]!.map((title) => CalendarEvent(
+                                title: title,
+                                startDate: day,
+                                endDate: day,
+                                status: 'holiday',
+                              )));
                     }
-                  });
-                },
-                selectedDayPredicate: (day) {
-                  //Das ausgewählte Datum wird markiert
-                  return isSameDay(_selectedDay, day);
-                },
-                onPageChanged: (focusedDay) {
-                  //Ändert den Fokus des Kalenders
-                  _focusedDay = focusedDay;
-                },
-
-                ///Kalender Builder
-                ///Hier wird der Kalender erstellt
-                ///Es wird ein Default Builder erstellt der die Tage im Kalender anzeigt
-                ///Die Tage die Samstag und Sonntag sind werden grau dargestellt
-                calendarBuilders: CalendarBuilders(
-                    defaultBuilder: (context, day, focusedDay) {
-                  //TODO: Funktioniert aktuell nicht das es angezeigt wird, falls zeit da ist machen ist ein Nice to have
-                  if (events.any((event) => event.status == 'holiday')) {
-                    return Positioned(
-                      right: 1,
-                      bottom: 1,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.yellow,
+                    // Aktuell keine wirkliche Relevants ausser das es von der IDE teile verlangte
+                    //also habe ich diese gleich komplett angezeigt aktuell nicht ersichtlich in dieser Form weil nur ein Eventmarker angezeigt wird
+                    // Zukünftig soll der Kalender "Ausklappbar" sein wo das wichtig wird
+                    //Missachtet also bewusst YAGNI Pattern
+                    return eventsFromDay
+                        .map((event) => CalendarEvent(
+                              id: event.id,
+                              title: event.title,
+                              startDate: event.startDate,
+                              endDate: event.endDate,
+                              userDeputy: event.userDeputy,
+                              status: event.status,
+                            ))
+                        .toList();
+                  },
+                  onFormatChanged: (format) {
+                    //Ändert das Format des Kalenders
+                    //Standard ist 1 Monat  wenn der Button gedrückt wird um das Format auf 2 Wochen oder 1 Woche zu wechseln
+                    // lade den Kalender neu
+                    setState(() {
+                      if (_calendarFormat != format) _calendarFormat = format;
+                    });
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      // Damit sich nicht bei jedem Klick der Kalender auf den Standard Monat resettet
+                      _focusedDay = focusedDay;
+                      _selectedDay = selectedDay;
+                
+                      ///Checkt ob das ausgewählte Datum bereits ausgewählt ist
+                      if (selectedDays.contains(selectedDay)) {
+                        ///Wenn ja, wird es entfernt
+                        selectedDays.remove(selectedDay);
+                
+                        ///Wenn bereits ein Datum ausgewählt ist, wird das neue Datum hinzugefügt
+                        ///Wenn zwei Daten ausgewählt sind, wird die Auswahl zurückgesetzt
+                        ///und das neue Datum hinzugefügt
+                      } else if (selectedDays.isEmpty ||
+                          selectedDays.any((d) =>
+                              (d.difference(selectedDay).inDays).abs() == 1)) {
+                        selectedDays.add(selectedDay);
+                      } else {
+                        selectedDays = [selectedDay];
+                      }
+                    });
+                  },
+                  selectedDayPredicate: (day) {
+                    //Das ausgewählte Datum wird markiert
+                    return isSameDay(_selectedDay, day);
+                  },
+                  onPageChanged: (focusedDay) {
+                    //Ändert den Fokus des Kalenders
+                    _focusedDay = focusedDay;
+                  },
+                
+                  ///Kalender Builder
+                  ///Hier wird der Kalender erstellt
+                  ///Es wird ein Default Builder erstellt der die Tage im Kalender anzeigt
+                  ///Die Tage die Samstag und Sonntag sind werden grau dargestellt
+                  calendarBuilders: CalendarBuilders(
+                      defaultBuilder: (context, day, focusedDay) {
+                    //TODO: Funktioniert aktuell nicht das es angezeigt wird, falls zeit da ist machen ist ein Nice to have
+                    if (events.any((event) => event.status == 'holiday')) {
+                      return Positioned(
+                        right: 1,
+                        bottom: 1,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.yellow,
+                          ),
+                          width: 8,
+                          height: 8,
                         ),
-                        width: 8,
-                        height: 8,
-                      ),
-                    );
-                  } else if (day.weekday == 6 || day.weekday == 7) {
-                    return Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        day.day.toString(),
-                        style: const TextStyle(
-                          color: StyleGuide.kColorGrey,
-                          fontSize: 16,
+                      );
+                    } else if (day.weekday == 6 || day.weekday == 7) {
+                      return Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          day.day.toString(),
+                          style: const TextStyle(
+                            color: StyleGuide.kColorGrey,
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                  return null;
-                }),
+                      );
+                    }
+                    return null;
+                  }),
+                ),
               ),
             ),
             StyleGuide.SizeBoxHeight32,

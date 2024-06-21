@@ -208,17 +208,19 @@ class _VerificationScreenState extends State<VerificationScreen> {
               child: Column(
                 children: [
                   // um Zwischen Verifizierung und Historie zu wechseln
-                  Switch(
-                    value: switchButton,
-                    onChanged: (bool newValue) {
-                      setState(() {
-                        switchButton = newValue;
-                      });
-                      if (switchButton) {
-                        Get.toNamed('/history');
-                      }
-                    },
-                    inactiveTrackColor: StyleGuide.kColorGrey,
+                  Flexible(
+                    child: Switch(
+                      value: switchButton,
+                      onChanged: (bool newValue) {
+                        setState(() {
+                          switchButton = newValue;
+                        });
+                        if (switchButton) {
+                          Get.toNamed('/history');
+                        }
+                      },
+                      inactiveTrackColor: StyleGuide.kColorGrey,
+                    ),
                   ),
                   StyleGuide.SizeBoxHeight16,
                   const Center(

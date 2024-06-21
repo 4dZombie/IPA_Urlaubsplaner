@@ -126,17 +126,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
               flex: 2,
               child: Column(
                 children: [
-                  Switch(
-                    value: switchButton,
-                    onChanged: (bool newValue) {
-                      setState(() {
-                        switchButton = newValue;
-                      });
-                      if (!switchButton) {
-                        Get.toNamed('/verification');
-                      }
-                    },
-                    activeTrackColor: StyleGuide.kColorSecondaryBlue,
+                  Flexible(
+                    child: Switch(
+                      value: switchButton,
+                      onChanged: (bool newValue) {
+                        setState(() {
+                          switchButton = newValue;
+                        });
+                        if (!switchButton) {
+                          Get.toNamed('/verification');
+                        }
+                      },
+                      activeTrackColor: StyleGuide.kColorSecondaryBlue,
+                    ),
                   ),
                   StyleGuide.SizeBoxHeight16,
                   const Center(

@@ -79,8 +79,8 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
               ),
               dialogBackgroundColor: StyleGuide.kColorPrimaryGreen,
               textTheme: const TextTheme(
-                bodyText1: TextStyle(color: StyleGuide.kColorWhite),
-                bodyText2: TextStyle(color: StyleGuide.kColorWhite),
+                bodyLarge: TextStyle(color: StyleGuide.kColorWhite),
+                bodyMedium: TextStyle(color: StyleGuide.kColorWhite),
               ),
             ),
             child: child!,
